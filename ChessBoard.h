@@ -27,9 +27,13 @@ public:
 
     ~ChessBoard();
 
-    bool overlap(const sf::Event& event, GamePieces*&) const;
+    bool overlapPiece(const sf::Event& event, GamePieces*&) const;
+
+    bool overlapBoard(const sf::Event& event, GamePieces*) const;
 
     void drag(const sf::Event&, GamePieces*);
+
+    void release(const sf::Event&, GamePieces*);
 
     void render(sf::RenderWindow*);
 

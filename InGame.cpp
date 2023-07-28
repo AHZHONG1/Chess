@@ -34,20 +34,23 @@ void InGame::update(sf::RenderWindow* window, State& state) {
             break;
         case sf::Event::MouseButtonPressed:
             if (event.mouseButton.button == sf::Mouse::Left) {
-                if (board->overlap(event, dragedPiece)) {
+                if (board->overlapPiece(event, dragedPiece)) {
                     std::cout << "Clicked" << std::endl;
                 }
             }
             break;
         case sf::Event::MouseButtonReleased:
             if (event.mouseButton.button == sf::Mouse::Left) {
+                if (dragedPiece) {
+                    board->release(event, dragedPiece);
+                }
                 dragedPiece = nullptr;
                 std::cout << "Released" << std::endl;
             }
             break;
         case sf::Event::MouseMoved:
             if (dragedPiece != nullptr) {
-                std::cout << event.mouseMove.x << " : " << event.mouseMove.y << std::endl;
+                //std::cout << event.mouseMove.x << " : " << event.mouseMove.y << std::endl;
                 board->drag(event, dragedPiece);
             }
             break;

@@ -30,6 +30,8 @@ public:
 
     void drag(const sf::Event&);
 
+    void place(int, int);
+
     virtual void render(sf::RenderWindow*);
 
 };

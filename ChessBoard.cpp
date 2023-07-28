@@ -65,7 +65,7 @@ ChessBoard::~ChessBoard() {
     }
 }
 
-bool ChessBoard::overlap(const sf::Event &event, GamePieces*& piece) const {
+bool ChessBoard::overlapPiece(const sf::Event &event, GamePieces*& piece) const {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             if (boardPiece[i][j]) {
@@ -79,8 +79,28 @@ bool ChessBoard::overlap(const sf::Event &event, GamePieces*& piece) const {
     return false;
 }
 
+bool ChessBoard::overlapBoard(const sf::Event& event, GamePieces* piece) const {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (board[i][j]) {
+                if (board[i][j]->getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                    piece->place(i, j);
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 void ChessBoard::drag(const sf::Event& event, GamePieces* piece) {
     piece->drag(event);
+}
+
+void ChessBoard::release(const sf::Event& event, GamePieces* piece) {
+    if (overlapBoard(event, piece)) {
+        
+    }
 }
 
 void ChessBoard::render(sf::RenderWindow* window) {

@@ -29,6 +29,10 @@ void GamePieces::drag(const sf::Event &event) {
     sprite.setPosition(event.mouseMove.x, event.mouseMove.y);
 }
 
+void GamePieces::place(int i, int j) {
+    sprite.setPosition(450 + 100 * i, 100 + 100 * j);
+}
+
 void GamePieces::render(sf::RenderWindow* window) {
     window->draw(sprite);
 }
