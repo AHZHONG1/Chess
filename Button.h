@@ -1,9 +1,9 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/String.hpp>
-#include<SFML/Graphics/Font.hpp>
-#include<SFML/Graphics/Text.hpp>
-#include<SFML/Window/Event.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Window/Event.hpp>
 
 namespace sf {
     class RectangleShape;

@@ -2,10 +2,13 @@
 #include <SFML/Graphics.hpp>
 #include "State.h"
 
+class ChessBoard;
+
 class InGame {
 
 private:
 
+    ChessBoard* board;
     
 
 public:

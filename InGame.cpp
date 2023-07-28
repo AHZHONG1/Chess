@@ -1,18 +1,19 @@
 #include "InGame.h"
 #include "Button.h"
 #include <iostream>
+#include "ChessBoard.h"
 
 InGame::InGame() {
 
 }
 
 InGame::InGame(int width, int height) {
-    
+    board = new ChessBoard();
 
 }
 
 InGame::~InGame() {
-    
+    delete board;
 }
 
 void InGame::update(sf::RenderWindow* window, State& state) {
@@ -29,7 +30,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
             }
             break;
         case sf::Event::LostFocus:
-            state = State::PauseState;
+            //state = State::PauseState;
             break;
         }
     }
@@ -37,5 +38,6 @@ void InGame::update(sf::RenderWindow* window, State& state) {
 
 void InGame::render(sf::RenderWindow* window) {
     window->clear(sf::Color::Black);
+    board->render(window);
     window->display();
 }
