@@ -36,6 +36,24 @@ MainMenu::~MainMenu() {
     delete startButton;
 }
 
+void MainMenu::update(sf::RenderWindow* window, State& state) {
+    sf::Event event;
+    while (window->pollEvent(event)) {
+        switch (event.type) {
+        case sf::Event::Closed:
+            window->close();
+            break;
+        case sf::Event::MouseButtonPressed:
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                if (startButton->click(event)) {
+                    state = State::InGameState;
+                }
+            }
+            break;
+        }
+    }
+}
+
 void MainMenu::render(sf::RenderWindow* window) {
     window->clear(sf::Color::Black);
     window->draw(textTitle);

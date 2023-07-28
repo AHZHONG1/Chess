@@ -2,24 +2,20 @@
 #include <SFML/Graphics.hpp>
 #include "State.h"
 
-class Button;
-
-class MainMenu {
+class PauseMenu {
 
 private:
 
     sf::Font font;
-    sf::Text textTitle;
-    sf::Text textCreator;
-    Button* startButton;
+    sf::Text textPause;
 
 public:
 
-    MainMenu();
+    PauseMenu();
 
-    MainMenu(int, int);
+    PauseMenu(int, int);
 
-    ~MainMenu();
+    ~PauseMenu();
 
     void update(sf::RenderWindow*, State&);
 

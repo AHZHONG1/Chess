@@ -3,6 +3,7 @@
 #include <SFML/System/String.hpp>
 #include<SFML/Graphics/Font.hpp>
 #include<SFML/Graphics/Text.hpp>
+#include<SFML/Window/Event.hpp>
 
 namespace sf {
     class RectangleShape;
@@ -24,6 +25,8 @@ public:
     Button(sf::Vector2f, sf::Vector2f, sf::String);
 
     ~Button();
+
+    bool click(const sf::Event& event) const;
 
     void render(sf::RenderWindow*);
 

@@ -29,6 +29,10 @@ Button::~Button() {
     delete rectangle;
 }
 
+bool Button::click(const sf::Event& event) const {
+    return rectangle->getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y);
+}
+
 void Button::render(sf::RenderWindow* window) {
     window->draw(*rectangle);
     window->draw(text);
