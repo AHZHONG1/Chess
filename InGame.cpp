@@ -2,18 +2,32 @@
 #include "Button.h"
 #include <iostream>
 #include "ChessBoard.h"
+#include "Timer.h"
 
-InGame::InGame() {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))) {
 
 }
 
-InGame::InGame(int width, int height) : dragedPiece(nullptr) {
-    board = new ChessBoard();
+InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1240, 50))) {
+    btn1 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 200), "Start");
+    btn2 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 300), "Pause");
+    btn3 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 200), "Start");
+    btn4 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 300), "Pause");
 
 }
 
 InGame::~InGame() {
+    delete btn1;
+    delete btn2;
+    delete btn3;
+    delete btn4;
     delete board;
+    delete timerWhite;
+    delete timerBlack;
+}
+
+void InGame::start() {
+    
 }
 
 void InGame::update(sf::RenderWindow* window, State& state) {
@@ -36,6 +50,18 @@ void InGame::update(sf::RenderWindow* window, State& state) {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 if (board->overlapPiece(event, dragedPiece)) {
                 }
+                if (btn1->click(event)) {
+                    timerWhite->start();
+                }
+                if (btn2->click(event)) {
+                    timerWhite->pause();
+                }
+                if (btn3->click(event)) {
+                    timerBlack->start();
+                }
+                if (btn4->click(event)) {
+                    timerBlack->pause();
+                }
             }
             break;
         case sf::Event::MouseButtonReleased:
@@ -53,10 +79,18 @@ void InGame::update(sf::RenderWindow* window, State& state) {
             break;
         }
     }
+    timerWhite->update();
+    timerBlack->update();
 }
 
 void InGame::render(sf::RenderWindow* window) {
     window->clear(sf::Color::Black);
+    timerWhite->render(window);
+    timerBlack->render(window);
+    btn1->render(window);
+    btn2->render(window);
+    btn3->render(window);
+    btn4->render(window);
     board->render(window);
     window->display();
 }

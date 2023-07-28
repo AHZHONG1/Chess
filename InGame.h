@@ -4,6 +4,8 @@
 
 class ChessBoard;
 class GamePieces;
+class Timer;
+class Button;
 
 class InGame {
 
@@ -13,7 +15,13 @@ private:
 
     GamePieces* dragedPiece;
 
+    Timer* timerWhite;
+    Timer* timerBlack;
 
+    Button* btn1;
+    Button* btn2;
+    Button* btn3;
+    Button* btn4;
     
 
 public:
@@ -23,6 +31,8 @@ public:
     InGame(int, int);
 
     ~InGame();
+
+    void start();
 
     void update(sf::RenderWindow*, State&);
 
