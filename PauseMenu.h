@@ -2,12 +2,16 @@
 #include <SFML/Graphics.hpp>
 #include "State.h"
 
+class Button;
+
 class PauseMenu {
 
 private:
 
     sf::Font font;
     sf::Text textPause;
+    Button* resumeButton;
+    Button* backMenuButton;
 
 public:
 
