@@ -1,6 +1,8 @@
 #pragma once
 
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 namespace sf {
     class RectangleShape;
@@ -17,6 +19,12 @@ private:
     sf::RectangleShape* board[8][8];
 
     GamePieces* boardPiece[8][8];
+
+    sf::Font font;
+
+    sf::RectangleShape* guideBox[3];
+
+    sf::Text text[3][8];
 
 
 
