@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Window/Event.hpp>
+
 namespace sf {
     class RectangleShape;
     class RenderWindow;
@@ -24,6 +26,10 @@ public:
     ChessBoard();
 
     ~ChessBoard();
+
+    bool overlap(const sf::Event& event, GamePieces*&) const;
+
+    void drag(const sf::Event&, GamePieces*);
 
     void render(sf::RenderWindow*);
 

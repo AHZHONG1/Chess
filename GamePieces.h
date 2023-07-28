@@ -2,6 +2,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/String.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Window/Event.hpp>
 
 namespace sf {
     class RenderWindow;
@@ -24,6 +25,10 @@ public:
     GamePieces(sf::String, int, int);
 
     ~GamePieces();
+
+    bool overlap(const sf::Event&) const;
+
+    void drag(const sf::Event&);
 
     virtual void render(sf::RenderWindow*);
 

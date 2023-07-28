@@ -3,12 +3,17 @@
 #include "State.h"
 
 class ChessBoard;
+class GamePieces;
 
 class InGame {
 
 private:
 
     ChessBoard* board;
+
+    GamePieces* dragedPiece;
+
+
     
 
 public:

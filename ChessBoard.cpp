@@ -65,6 +65,24 @@ ChessBoard::~ChessBoard() {
     }
 }
 
+bool ChessBoard::overlap(const sf::Event &event, GamePieces*& piece) const {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (boardPiece[i][j]) {
+                if (boardPiece[i][j]->overlap(event)) {
+                    piece = boardPiece[i][j];
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+void ChessBoard::drag(const sf::Event& event, GamePieces* piece) {
+    piece->drag(event);
+}
+
 void ChessBoard::render(sf::RenderWindow* window) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
