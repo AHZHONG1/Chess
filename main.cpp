@@ -4,6 +4,7 @@
 #include "MainMenu.h"
 #include "InGame.h"
 #include "PauseMenu.h"
+#include "GameSetting.h"
 
 int main() {
 
@@ -13,25 +14,57 @@ int main() {
     window.setFramerateLimit(60);
 
     State state = State::MainMenuState;
-    MainMenu mainMenu(width, height);
-    InGame inGame(width, height);
-    PauseMenu pauseMenu(width, height);
+    MainMenu* mainMenu = nullptr;
+    InGame* inGame = nullptr;
+    PauseMenu* pauseMenu = nullptr;
+    GameSetting* gameSetting = nullptr;
+
 
     while (window.isOpen()) {
         switch (state) {
         case State::MainMenuState:
-            mainMenu.update(&window, state);
-            mainMenu.render(&window);
+            if (mainMenu == nullptr) {
+                mainMenu = new MainMenu(width, height);
+            }
+            if (inGame) {
+                delete inGame;
+                inGame = nullptr;
+            }
+            mainMenu->update(&window, state);
+            mainMenu->render(&window);
             break;
         case State::InGameState:
-            inGame.update(&window, state);
-            inGame.render(&window);
+            if (inGame == nullptr) {
+                inGame = new InGame(width, height);
+            }
+            inGame->update(&window, state);
+            inGame->render(&window);
             break;
         case State::PauseState:
-            pauseMenu.update(&window, state);
-            pauseMenu.render(&window);
+            if (pauseMenu == nullptr) {
+                pauseMenu = new PauseMenu(width, height);
+            }
+            pauseMenu->update(&window, state);
+            pauseMenu->render(&window);
+            break;
+        case State::GameSettingState:
+            if (gameSetting == nullptr) {
+                gameSetting = new GameSetting(width, height);
+            }
+            gameSetting->update(&window, state);
+            gameSetting->render(&window);
             break;
         }
+    }
+
+    if (mainMenu) {
+        delete mainMenu;
+    }
+    if (inGame) {
+        delete inGame;
+    }
+    if (pauseMenu) {
+        delete pauseMenu;
     }
 
     return 0;

@@ -1,3 +1,3 @@
 #pragma once
 
-enum State { MainMenuState, InGameState, PauseState };
+enum State { MainMenuState, InGameState, PauseState, GameSettingState };

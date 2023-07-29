@@ -3,6 +3,7 @@
 #include <iostream>
 #include "ChessBoard.h"
 #include "Timer.h"
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))) {

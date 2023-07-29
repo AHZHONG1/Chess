@@ -49,7 +49,7 @@ void MainMenu::update(sf::RenderWindow* window, State& state) {
         case sf::Event::MouseButtonPressed:
             if (event.mouseButton.button == sf::Mouse::Left) {
                 if (startButton->click(event)) {
-                    state = State::InGameState;
+                    state = State::GameSettingState;
                 }
                 if (quitButton->click(event)) {
                     window->close();
