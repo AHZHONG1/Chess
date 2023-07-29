@@ -1,11 +1,9 @@
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
 #include "State.h"
 #include "MainMenu.h"
 #include "InGame.h"
 #include "PauseMenu.h"
-
-using namespace std;
 
 int main() {
 

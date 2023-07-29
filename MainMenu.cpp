@@ -1,6 +1,7 @@
 #include "MainMenu.h"
 #include "Button.h"
 #include <iostream>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 MainMenu::MainMenu() {
 

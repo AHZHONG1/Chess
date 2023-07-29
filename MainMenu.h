@@ -1,6 +1,11 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include "State.h"
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+
+namespace sf {
+    class RenderWindow;
+}
 
 class Button;
 

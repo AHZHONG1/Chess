@@ -4,9 +4,9 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace sf {
-    class RectangleShape;
     class RenderWindow;
 }
 
@@ -14,7 +14,7 @@ class Button {
 
 private:
 
-    sf::RectangleShape* rectangle;
+    sf::RectangleShape rectangle;
     sf::Font font;
     sf::Text text;
 

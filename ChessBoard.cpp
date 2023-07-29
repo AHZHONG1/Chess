@@ -1,5 +1,5 @@
 #include "ChessBoard.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include "GamePieces.h"
 #include "GamePieces/Bishop.h"
 #include "GamePieces/Knight.h"
@@ -12,10 +12,10 @@
 ChessBoard::ChessBoard() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            board[i][j] = new sf::RectangleShape(sf::Vector2f(100, 100));
-            board[i][j]->setPosition(sf::Vector2f(400 + 100 * i, 50 + 100 * j));
-            sf::FloatRect boardRect = board[i][j]->getLocalBounds();
-            board[i][j]->setFillColor(((i + j) % 2 == 1) ? sf::Color(112, 162, 163) : sf::Color(177, 228, 185));
+            board[i][j].setSize(sf::Vector2f(100, 100));
+            board[i][j].setPosition(sf::Vector2f(400 + 100 * i, 50 + 100 * j));
+            sf::FloatRect boardRect = board[i][j].getLocalBounds();
+            board[i][j].setFillColor(((i + j) % 2 == 1) ? sf::Color(112, 162, 163) : sf::Color(177, 228, 185));
         }
     }
     for (int i = 0; i < 8; ++i) {
@@ -85,17 +85,17 @@ ChessBoard::ChessBoard() {
         text[2][i].setFillColor(sf::Color::Black);
     }
 
-    guideBox[0] = new sf::RectangleShape(sf::Vector2f(20, 820));
-    guideBox[0]->setFillColor(sf::Color(27, 153, 139));
-    guideBox[0]->setPosition(380, 50);
+    guideBox[0].setSize(sf::Vector2f(20, 820));
+    guideBox[0].setFillColor(sf::Color(27, 153, 139));
+    guideBox[0].setPosition(380, 50);
 
-    guideBox[1] = new sf::RectangleShape(sf::Vector2f(20, 820));
-    guideBox[1]->setFillColor(sf::Color(27, 153, 139));
-    guideBox[1]->setPosition(1200, 50);
+    guideBox[1].setSize(sf::Vector2f(20, 820));
+    guideBox[1].setFillColor(sf::Color(27, 153, 139));
+    guideBox[1].setPosition(1200, 50);
 
-    guideBox[2] = new sf::RectangleShape(sf::Vector2f(800, 20));
-    guideBox[2]->setFillColor(sf::Color(27, 153, 139));
-    guideBox[2]->setPosition(400, 850);
+    guideBox[2].setSize(sf::Vector2f(800, 20));
+    guideBox[2].setFillColor(sf::Color(27, 153, 139));
+    guideBox[2].setPosition(400, 850);
 
     
 
@@ -105,18 +105,10 @@ ChessBoard::ChessBoard() {
 ChessBoard::~ChessBoard() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            delete board[i][j];
-        }
-    }
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
             if (boardPiece[i][j]) {
                 delete boardPiece[i][j];
             }
         }
-    }
-    for (int i = 0; i < 3; ++i) {
-        delete guideBox[i];
     }
 }
 
@@ -137,11 +129,9 @@ bool ChessBoard::overlapPiece(const sf::Event &event, GamePieces*& piece) const 
 bool ChessBoard::overlapBoard(const sf::Event& event, GamePieces* piece) const {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            if (board[i][j]) {
-                if (board[i][j]->getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                    piece->place(i, j);
-                    return true;
-                }
+            if (board[i][j].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                piece->place(i, j);
+                return true;
             }
         }
     }
@@ -161,11 +151,11 @@ void ChessBoard::release(const sf::Event& event, GamePieces* piece) {
 void ChessBoard::render(sf::RenderWindow* window) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
-            window->draw(*board[i][j]);
+            window->draw(board[i][j]);
         } 
     }
     for (int i = 0; i < 3; ++i) {
-        window->draw(*guideBox[i]);
+        window->draw(guideBox[i]);
     }
 
     for (int i = 0; i < 3; ++i) {

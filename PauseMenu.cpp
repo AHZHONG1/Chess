@@ -1,6 +1,7 @@
 #include "PauseMenu.h"
 #include "Button.h"
 #include <iostream>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 PauseMenu::PauseMenu() {
 

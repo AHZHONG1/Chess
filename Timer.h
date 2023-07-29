@@ -2,9 +2,9 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace sf {
-    class RectangleShape;
     class RenderWindow;
 }
 
@@ -17,7 +17,7 @@ private:
     int hour, minute, second, millisecond;
     int totalTime, remainingTime;
 
-    sf::RectangleShape* rectangle;
+    sf::RectangleShape rectangle;
     sf::Font font;
     sf::Text text;
 

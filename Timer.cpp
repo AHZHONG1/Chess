@@ -1,6 +1,6 @@
 #include "Timer.h"
 #include <iostream>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 Timer::Timer() : hour(0), minute(10), second(0), totalTime((hour * 3600 + minute * 60 + second) * 1000) {   
 
@@ -8,9 +8,9 @@ Timer::Timer() : hour(0), minute(10), second(0), totalTime((hour * 3600 + minute
 
 Timer::Timer(int hour, int minute, int second, sf::Vector2f position) : hour(hour), minute(minute), second(second), millisecond(0), totalTime((hour * 3600 + minute * 60 + second) * 1000), clock(nullptr), remainingTime(totalTime) {
     
-    rectangle = new sf::RectangleShape(sf::Vector2f(300, 40));
-    rectangle->setPosition(position);
-    rectangle->setFillColor(sf::Color::White);
+    rectangle.setSize(sf::Vector2f(300, 40));
+    rectangle.setPosition(position);
+    rectangle.setFillColor(sf::Color::White);
 
     if (!font.loadFromFile("./Font/roboto/Roboto-Regular.ttf")) {
         std::cout << "Loading error" << std::endl;
@@ -26,7 +26,6 @@ Timer::Timer(int hour, int minute, int second, sf::Vector2f position) : hour(hou
 }
 
 Timer::~Timer() {
-    delete rectangle;
     if (clock) {
         delete clock;
     }
@@ -56,7 +55,7 @@ void Timer::update() {
     }
 
     text.setString("Time: " + ((hour >= 10) ? std::to_string(hour) : "0" + std::to_string(hour)) + ":" + ((minute >= 10) ? std::to_string(minute) : "0" + std::to_string(minute)) + ":" + ((second >= 10) ? std::to_string(second) : "0" + std::to_string(second)) + ":" + ((millisecond >= 100) ? std::to_string(millisecond) : ((millisecond >= 10) ? "0" + std::to_string(millisecond) : "00" + std::to_string(millisecond))));
-    std::cout << remainingTime << std::endl;
+    //std::cout << remainingTime << std::endl;
     if (remainingTime <= 0) {
         text.setString("End");
         return;
@@ -65,7 +64,7 @@ void Timer::update() {
 }
 
 void Timer::render(sf::RenderWindow* window) {
-    window->draw(*rectangle);
+    window->draw(rectangle);
     window->draw(text);
 }
 

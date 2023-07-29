@@ -1,5 +1,5 @@
 #include "GamePieces.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
 
 GamePieces::GamePieces() {

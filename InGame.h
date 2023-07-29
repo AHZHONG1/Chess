@@ -1,11 +1,16 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include "State.h"
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 class ChessBoard;
 class GamePieces;
 class Timer;
 class Button;
+
+namespace sf {
+    class RenderWindow;
+}
 
 class InGame {
 
@@ -22,6 +27,9 @@ private:
     Button* btn2;
     Button* btn3;
     Button* btn4;
+
+    sf::Texture backgroundTexture;
+    sf::Sprite backgroundSprite;
     
 
 public:

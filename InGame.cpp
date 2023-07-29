@@ -3,12 +3,21 @@
 #include <iostream>
 #include "ChessBoard.h"
 #include "Timer.h"
+#include <SFML/Graphics/RenderWindow.hpp>
 
 InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))) {
 
 }
 
-InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1240, 50))) {
+InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))) {
+    if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
+        std::cout << "Cannot load image" << std::endl;
+    }
+
+    backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setPosition(0, 0);
+    
+    
     btn1 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 200), "Start");
     btn2 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 300), "Pause");
     btn3 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 200), "Start");
@@ -85,6 +94,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
 
 void InGame::render(sf::RenderWindow* window) {
     window->clear(sf::Color::Black);
+    window->draw(backgroundSprite);
     timerWhite->render(window);
     timerBlack->render(window);
     btn1->render(window);
