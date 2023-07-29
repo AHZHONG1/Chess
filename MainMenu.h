@@ -17,6 +17,7 @@ private:
     sf::Text textTitle;
     sf::Text textCreator;
     Button* startButton;
+    Button* quitButton;
 
 public:
 

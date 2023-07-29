@@ -30,11 +30,13 @@ MainMenu::MainMenu(int width, int height) {
     textCreator.setFillColor(sf::Color::Red);
 
     startButton = new Button(sf::Vector2f(200, 50), sf::Vector2f(width / 2.0, 500), "Start");
+    quitButton = new Button(sf::Vector2f(200, 50), sf::Vector2f(width / 2.0, 600), "Quit");
 
 }
 
 MainMenu::~MainMenu() {
     delete startButton;
+    delete quitButton;
 }
 
 void MainMenu::update(sf::RenderWindow* window, State& state) {
@@ -49,6 +51,9 @@ void MainMenu::update(sf::RenderWindow* window, State& state) {
                 if (startButton->click(event)) {
                     state = State::InGameState;
                 }
+                if (quitButton->click(event)) {
+                    window->close();
+                }
             }
             break;
         }
@@ -60,5 +65,6 @@ void MainMenu::render(sf::RenderWindow* window) {
     window->draw(textTitle);
     window->draw(textCreator);
     startButton->render(window);
+    quitButton->render(window);
     window->display();
 }
