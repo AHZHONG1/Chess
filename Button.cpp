@@ -6,12 +6,13 @@ Button::Button() {
 
 }
 
-Button::Button(sf::Vector2f size, sf::Vector2f position, sf::String text) {
+Button::Button(sf::Vector2f size, sf::Vector2f position, sf::String text, sf::Color backgroundColor, sf::Color textColor) {
     rectangle.setSize(size);
     rectangle.setPosition(position);
     sf::FloatRect buttonRect = rectangle.getLocalBounds();
     rectangle.setOrigin(buttonRect.left + buttonRect.width / 2.0, buttonRect.top + buttonRect.height / 2.0);
-
+    rectangle.setFillColor(backgroundColor);
+    
     if (!font.loadFromFile("./Font/roboto/Roboto-Regular.ttf")) {
         std::cout << "Loading error" << std::endl;
     } 
@@ -22,7 +23,7 @@ Button::Button(sf::Vector2f size, sf::Vector2f position, sf::String text) {
     this->text.setPosition(position);
     sf::FloatRect textRect = this->text.getLocalBounds();
     this->text.setOrigin(textRect.left + textRect.width / 2.0, textRect.top + textRect.height / 2.0);
-    this->text.setFillColor(sf::Color::Red);
+    this->text.setFillColor(textColor);
 }
 
 Button::~Button() {

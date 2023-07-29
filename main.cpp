@@ -66,6 +66,9 @@ int main() {
     if (pauseMenu) {
         delete pauseMenu;
     }
+    if (gameSetting) {
+        delete gameSetting;
+    }
 
     return 0;
 }

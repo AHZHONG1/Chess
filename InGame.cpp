@@ -19,10 +19,10 @@ InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nul
     backgroundSprite.setPosition(0, 0);
     
     
-    btn1 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 200), "Start");
-    btn2 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 300), "Pause");
-    btn3 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 200), "Start");
-    btn4 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 300), "Pause");
+    btn1 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 200), "Start", sf::Color::White, sf::Color::Red);
+    btn2 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 300), "Pause", sf::Color::White, sf::Color::Red);
+    btn3 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 200), "Start", sf::Color::White, sf::Color::Red);
+    btn4 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 300), "Pause", sf::Color::White, sf::Color::Red);
 
 }
 

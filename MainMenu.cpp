@@ -29,8 +29,8 @@ MainMenu::MainMenu(int width, int height) {
     textCreator.setOrigin(textCreatorRect.left + textCreatorRect.width / 2.0, textCreatorRect.top + textCreatorRect.height / 2.0);
     textCreator.setFillColor(sf::Color::Red);
 
-    startButton = new Button(sf::Vector2f(200, 50), sf::Vector2f(width / 2.0, 500), "Start");
-    quitButton = new Button(sf::Vector2f(200, 50), sf::Vector2f(width / 2.0, 600), "Quit");
+    startButton = new Button(sf::Vector2f(200, 50), sf::Vector2f(width / 2.0, 500), "Start", sf::Color::White, sf::Color::Red);
+    quitButton = new Button(sf::Vector2f(200, 50), sf::Vector2f(width / 2.0, 600), "Quit", sf::Color::White, sf::Color::Red);
 
 }
 

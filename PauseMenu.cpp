@@ -20,8 +20,8 @@ PauseMenu::PauseMenu(int width, int height) {
     textPause.setOrigin(textPauseRect.left + textPauseRect.width / 2.0, textPauseRect.top + textPauseRect.height / 2.0);
     textPause.setFillColor(sf::Color::Red);
 
-    resumeButton = new Button(sf::Vector2f(250, 50), sf::Vector2f(width / 2.0, 500), "Resume");
-    backMenuButton = new Button(sf::Vector2f(250, 50), sf::Vector2f(width / 2.0, 600), "Back to Menu");
+    resumeButton = new Button(sf::Vector2f(250, 50), sf::Vector2f(width / 2.0, 500), "Resume", sf::Color::White, sf::Color::Red);
+    backMenuButton = new Button(sf::Vector2f(250, 50), sf::Vector2f(width / 2.0, 600), "Back to Menu", sf::Color::White, sf::Color::Red);
 
 }
 

@@ -22,7 +22,7 @@ private:
 public:
     Button();
 
-    Button(sf::Vector2f, sf::Vector2f, sf::String);
+    Button(sf::Vector2f, sf::Vector2f, sf::String, sf::Color, sf::Color);
 
     ~Button();
 
