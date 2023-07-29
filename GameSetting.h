@@ -2,6 +2,7 @@
 #include "State.h"
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 class Button;
 
@@ -21,6 +22,8 @@ private:
     Button* gamemode2Button;
     Button* gamemode3Button;
     Button* readyButton;
+
+    sf::RectangleShape iconRect;
 
 
 public:
