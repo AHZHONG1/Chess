@@ -1,5 +1,5 @@
 #pragma once
-#include "State.h"
+#include "General.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
@@ -20,6 +20,8 @@ private:
 
     GamePieces* dragedPiece;
 
+    int originalPieceX, originalPieceY;
+
     Timer* timerWhite;
     Timer* timerBlack;
 
@@ -30,6 +32,8 @@ private:
 
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
+
+    Player turn;
     
 
 public:

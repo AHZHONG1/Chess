@@ -13,7 +13,7 @@ ChessBoard::ChessBoard() {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             board[i][j].setSize(sf::Vector2f(100, 100));
-            board[i][j].setPosition(sf::Vector2f(400 + 100 * i, 50 + 100 * j));
+            board[i][j].setPosition(sf::Vector2f(400 + 100 * j, 50 + 100 * i));
             sf::FloatRect boardRect = board[i][j].getLocalBounds();
             board[i][j].setFillColor(((i + j) % 2 == 1) ? sf::Color(112, 162, 163) : sf::Color(177, 228, 185));
         }
@@ -25,30 +25,30 @@ ChessBoard::ChessBoard() {
     }
 
     for (int i = 0; i < 8; ++i) {
-        boardPiece[1][i] = new Pawn("./Textures/Black-Pawn.png", 1, i);
-        boardPiece[6][i] = new Pawn("./Textures/White-Pawn.png", 6, i);
+        boardPiece[1][i] = new Pawn("./Textures/Black-Pawn.png", 1, i, Player::Black);
+        boardPiece[6][i] = new Pawn("./Textures/White-Pawn.png", 6, i, Player::White);
     }
 
-    boardPiece[0][0] = new Rook("./Textures/Black-Rook.png", 0, 0);
-    boardPiece[0][7] = new Rook("./Textures/Black-Rook.png", 0, 7);
-    boardPiece[7][0] = new Rook("./Textures/White-Rook.png", 7, 0);
-    boardPiece[7][7] = new Rook("./Textures/White-Rook.png", 7, 7);
+    boardPiece[0][0] = new Rook("./Textures/Black-Rook.png", 0, 0, Player::Black);
+    boardPiece[0][7] = new Rook("./Textures/Black-Rook.png", 0, 7, Player::Black);
+    boardPiece[7][0] = new Rook("./Textures/White-Rook.png", 7, 0, Player::White);
+    boardPiece[7][7] = new Rook("./Textures/White-Rook.png", 7, 7, Player::White);
 
-    boardPiece[0][1] = new Knight("./Textures/Black-Knight.png", 0, 1);
-    boardPiece[0][6] = new Knight("./Textures/Black-Knight.png", 0, 6);
-    boardPiece[7][1] = new Knight("./Textures/White-Knight.png", 7, 1);
-    boardPiece[7][6] = new Knight("./Textures/White-Knight.png", 7, 6);
+    boardPiece[0][1] = new Knight("./Textures/Black-Knight.png", 0, 1, Player::Black);
+    boardPiece[0][6] = new Knight("./Textures/Black-Knight.png", 0, 6, Player::Black);
+    boardPiece[7][1] = new Knight("./Textures/White-Knight.png", 7, 1, Player::White);
+    boardPiece[7][6] = new Knight("./Textures/White-Knight.png", 7, 6, Player::White);
 
-    boardPiece[0][2] = new Bishop("./Textures/Black-Bishop.png", 0, 2);
-    boardPiece[0][5] = new Bishop("./Textures/Black-Bishop.png", 0, 5);
-    boardPiece[7][2] = new Bishop("./Textures/White-Bishop.png", 7, 2);
-    boardPiece[7][5] = new Bishop("./Textures/White-Bishop.png", 7, 5);
+    boardPiece[0][2] = new Bishop("./Textures/Black-Bishop.png", 0, 2, Player::Black);
+    boardPiece[0][5] = new Bishop("./Textures/Black-Bishop.png", 0, 5, Player::Black);
+    boardPiece[7][2] = new Bishop("./Textures/White-Bishop.png", 7, 2, Player::White);
+    boardPiece[7][5] = new Bishop("./Textures/White-Bishop.png", 7, 5, Player::White);
 
-    boardPiece[0][3] = new Queen("./Textures/Black-Queen.png", 0, 3);
-    boardPiece[7][3] = new Queen("./Textures/White-Queen.png", 7, 3);
+    boardPiece[0][3] = new Queen("./Textures/Black-Queen.png", 0, 3, Player::Black);
+    boardPiece[7][3] = new Queen("./Textures/White-Queen.png", 7, 3, Player::White);
 
-    boardPiece[0][4] = new King("./Textures/Black-King.png", 0, 4);
-    boardPiece[7][4] = new King("./Textures/White-King.png", 7, 4);
+    boardPiece[0][4] = new King("./Textures/Black-King.png", 0, 4, Player::Black);
+    boardPiece[7][4] = new King("./Textures/White-King.png", 7, 4, Player::White);
 
     if (!font.loadFromFile("./Font/roboto/Roboto-Regular.ttf")) {
         std::cout << "Loading error" << std::endl;
@@ -112,12 +112,14 @@ ChessBoard::~ChessBoard() {
     }
 }
 
-bool ChessBoard::overlapPiece(const sf::Event &event, GamePieces*& piece) const {
+bool ChessBoard::overlapPiece(const sf::Event &event, GamePieces*& piece, int& x, int& y, Player turn) const {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             if (boardPiece[i][j]) {
-                if (boardPiece[i][j]->overlap(event)) {
+                if (boardPiece[i][j]->overlap(event) && boardPiece[i][j]->getColor() == turn) {
                     piece = boardPiece[i][j];
+                    y = i;
+                    x = j;
                     return true;
                 }
             }
@@ -126,15 +128,20 @@ bool ChessBoard::overlapPiece(const sf::Event &event, GamePieces*& piece) const 
     return false;
 }
 
-bool ChessBoard::overlapBoard(const sf::Event& event, GamePieces* piece) const {
+bool ChessBoard::overlapBoard(const sf::Event& event, GamePieces* piece, int x, int y) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             if (board[i][j].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                piece->place(i, j);
+                piece->place(j, i);
+                if (i != y || j != x) {
+                    boardPiece[i][j] = boardPiece[y][x];
+                    boardPiece[y][x] = nullptr;
+                }
                 return true;
             }
         }
     }
+    piece->place(x, y);
     return false;
 }
 
@@ -142,8 +149,8 @@ void ChessBoard::drag(const sf::Event& event, GamePieces* piece) {
     piece->drag(event);
 }
 
-void ChessBoard::release(const sf::Event& event, GamePieces* piece) {
-    if (overlapBoard(event, piece)) {
+void ChessBoard::release(const sf::Event& event, GamePieces* piece, int i, int j) {
+    if (overlapBoard(event, piece, i, j)) {
         
     }
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "../GamePieces.h"
+#include "../General.h"
 
 class Bishop : public GamePieces {
 
@@ -13,7 +14,7 @@ public:
 
     Bishop();
 
-    Bishop(sf::String, int, int);
+    Bishop(sf::String, int, int, Player);
 
     ~Bishop();
 

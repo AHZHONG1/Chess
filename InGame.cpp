@@ -6,11 +6,11 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))) {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White) {
 
 }
 
-InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))) {
+InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }
@@ -24,6 +24,7 @@ InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nul
     btn3 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 200), "Start", sf::Color::White, sf::Color::Red);
     btn4 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 300), "Pause", sf::Color::White, sf::Color::Red);
 
+    start();
 }
 
 InGame::~InGame() {
@@ -37,10 +38,23 @@ InGame::~InGame() {
 }
 
 void InGame::start() {
-    
+    timerWhite->start();
+    timerBlack->start();
 }
 
 void InGame::update(sf::RenderWindow* window, State& state) {
+
+    switch (turn) {
+    case Player::White:
+        timerWhite->start();
+        timerBlack->pause();
+        break;
+    case Player::Black:
+        timerWhite->pause();
+        timerBlack->start();
+        break;
+    } 
+
     sf::Event event;
 
     while (window->pollEvent(event)) {
@@ -58,7 +72,8 @@ void InGame::update(sf::RenderWindow* window, State& state) {
             break;
         case sf::Event::MouseButtonPressed:
             if (event.mouseButton.button == sf::Mouse::Left) {
-                if (board->overlapPiece(event, dragedPiece)) {
+                if (board->overlapPiece(event, dragedPiece, originalPieceX, originalPieceY, turn)) {
+
                 }
                 if (btn1->click(event)) {
                     timerWhite->start();
@@ -77,7 +92,10 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         case sf::Event::MouseButtonReleased:
             if (event.mouseButton.button == sf::Mouse::Left) {
                 if (dragedPiece) {
-                    board->release(event, dragedPiece);
+                    if (board->moveValid()) {
+                        board->release(event, dragedPiece, originalPieceX, originalPieceY);
+                    }
+                    
                 }
                 dragedPiece = nullptr;
             }
@@ -85,12 +103,14 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         case sf::Event::MouseMoved:
             if (dragedPiece != nullptr) {
                 board->drag(event, dragedPiece);
+                board->showPossibleMove();
             }
             break;
         }
-    }
+    } 
     timerWhite->update();
     timerBlack->update();
+    
 }
 
 void InGame::render(sf::RenderWindow* window) {

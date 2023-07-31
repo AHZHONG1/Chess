@@ -1,6 +1,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
-#include "State.h"
+#include "General.h"
 #include "MainMenu.h"
 #include "InGame.h"
 #include "PauseMenu.h"

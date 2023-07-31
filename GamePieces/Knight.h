@@ -1,5 +1,6 @@
 #pragma once
 #include "../GamePieces.h"
+#include "../General.h"
 
 class Knight : public GamePieces {
 
@@ -13,7 +14,7 @@ public:
 
     Knight();
 
-    Knight(sf::String, int, int);
+    Knight(sf::String, int, int, Player);
 
     ~Knight();
 

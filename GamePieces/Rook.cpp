@@ -4,7 +4,7 @@ Rook::Rook() {
 
 }
 
-Rook::Rook(sf::String texturePath, int i, int j) : GamePieces(texturePath, i, j) {
+Rook::Rook(sf::String texturePath, int i, int j, Player color) : GamePieces(texturePath, i, j, color) {
 
 }
 

@@ -4,7 +4,7 @@ Pawn::Pawn() {
 
 }
 
-Pawn::Pawn(sf::String texturePath, int i, int j) : GamePieces(texturePath, i, j) {
+Pawn::Pawn(sf::String texturePath, int i, int j, Player color) : GamePieces(texturePath, i, j, color) {
 
 }
 

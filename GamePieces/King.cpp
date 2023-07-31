@@ -4,7 +4,7 @@ King::King() {
 
 }
 
-King::King(sf::String texturePath, int i, int j) : GamePieces(texturePath, i, j) {
+King::King(sf::String texturePath, int i, int j, Player color) : GamePieces(texturePath, i, j, color) {
 
 }
 

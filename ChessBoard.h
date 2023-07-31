@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include "General.h"
 
 namespace sf {
     class RenderWindow;
@@ -35,13 +36,17 @@ public:
 
     ~ChessBoard();
 
-    bool overlapPiece(const sf::Event& event, GamePieces*&) const;
+    bool overlapPiece(const sf::Event& event, GamePieces*&, int&, int&, Player) const;
 
-    bool overlapBoard(const sf::Event& event, GamePieces*) const;
+    bool overlapBoard(const sf::Event& event, GamePieces*, int, int);
 
     void drag(const sf::Event&, GamePieces*);
 
-    void release(const sf::Event&, GamePieces*);
+    void release(const sf::Event&, GamePieces*, int, int);
+
+    void showPossibleMove();
+
+    bool moveValid();
 
     void render(sf::RenderWindow*);
 

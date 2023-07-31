@@ -1,5 +1,6 @@
 #pragma once
 #include "../GamePieces.h"
+#include "../General.h"
 
 class Pawn : public GamePieces {
 
@@ -13,7 +14,7 @@ public:
 
     Pawn();
 
-    Pawn(sf::String, int, int);
+    Pawn(sf::String, int, int, Player);
 
     ~Pawn();
 

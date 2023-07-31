@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
-#include "State.h"
+#include "General.h"
 
 namespace sf {
     class RenderWindow;

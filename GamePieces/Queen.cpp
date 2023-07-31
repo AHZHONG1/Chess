@@ -4,7 +4,7 @@ Queen::Queen() {
 
 }
 
-Queen::Queen(sf::String texturePath, int i, int j) : GamePieces(texturePath, i, j) {
+Queen::Queen(sf::String texturePath, int i, int j, Player color) : GamePieces(texturePath, i, j, color) {
 
 }
 

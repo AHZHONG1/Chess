@@ -6,7 +6,7 @@ GamePieces::GamePieces() {
     
 }
 
-GamePieces::GamePieces(sf::String texturePath, int i, int j) {
+GamePieces::GamePieces(sf::String texturePath, int i, int j, Player color) : color(color) {
     if (!texture.loadFromFile(texturePath)) {
         std::cout << "Texture not load" << std::endl;
     }
@@ -29,8 +29,12 @@ void GamePieces::drag(const sf::Event &event) {
     sprite.setPosition(event.mouseMove.x, event.mouseMove.y);
 }
 
-void GamePieces::place(int i, int j) {
-    sprite.setPosition(450 + 100 * i, 100 + 100 * j);
+void GamePieces::place(int x, int y) {
+    sprite.setPosition(450 + 100 * x, 100 + 100 * y);
+}
+
+Player GamePieces::getColor() {
+    return color;
 }
 
 void GamePieces::render(sf::RenderWindow* window) {

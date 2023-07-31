@@ -1,5 +1,6 @@
 #pragma once
 #include "../GamePieces.h"
+#include "../General.h"
 
 class Rook : public GamePieces {
 
@@ -13,7 +14,7 @@ public:
 
     Rook();
 
-    Rook(sf::String, int, int);
+    Rook(sf::String, int, int, Player);
 
     ~Rook();
 
