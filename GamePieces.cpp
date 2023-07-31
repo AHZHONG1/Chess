@@ -1,12 +1,17 @@
 #include "GamePieces.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
+#include "ChessBoard.h"
 
 GamePieces::GamePieces() {
     
 }
 
-GamePieces::GamePieces(sf::String texturePath, int i, int j, Player color) : color(color) {
+GamePieces::GamePieces(GamePieces* piece, ChessBoard* boardState) : color(piece->color), boardState(boardState) {
+
+}
+
+GamePieces::GamePieces(sf::String texturePath, int i, int j, Player color, ChessBoard* boardState) : color(color), boardState(boardState) {
     if (!texture.loadFromFile(texturePath)) {
         std::cout << "Texture not load" << std::endl;
     }
@@ -35,6 +40,10 @@ void GamePieces::place(int x, int y) {
 
 Player GamePieces::getColor() {
     return color;
+}
+
+ChessBoard* GamePieces::getBoardState() {
+    return boardState;
 }
 
 void GamePieces::render(sf::RenderWindow* window) {

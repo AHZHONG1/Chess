@@ -5,6 +5,7 @@
 #include "Timer.h"
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "GamePieces.h"
 
 InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White) {
 
@@ -92,8 +93,10 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         case sf::Event::MouseButtonReleased:
             if (event.mouseButton.button == sf::Mouse::Left) {
                 if (dragedPiece) {
-                    if (board->moveValid()) {
-                        board->release(event, dragedPiece, originalPieceX, originalPieceY);
+                    if (!board->moveValid(event, dragedPiece, originalPieceY, originalPieceX, turn)) {
+                        dragedPiece->place(originalPieceX, originalPieceY);
+                    } else {
+                        turn = (turn == Player::White) ? Player::Black : Player::White;
                     }
                     
                 }

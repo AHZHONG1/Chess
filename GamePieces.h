@@ -9,6 +9,8 @@ namespace sf {
     class RenderWindow;
 }
 
+class ChessBoard;
+
 class GamePieces {
 
 private:
@@ -19,13 +21,17 @@ private:
 
     Player color;
 
+    ChessBoard* boardState;
+
 public:
 
     GamePieces();
 
-    GamePieces(sf::String, int, int, Player);
+    GamePieces(GamePieces*, ChessBoard*);
 
-    ~GamePieces();
+    GamePieces(sf::String, int, int, Player, ChessBoard*);
+
+    virtual ~GamePieces();
 
     bool overlap(const sf::Event&) const;
 
@@ -35,6 +41,12 @@ public:
 
     Player getColor();
 
+    ChessBoard* getBoardState();
+
     virtual void render(sf::RenderWindow*);
+
+    virtual bool moveValidate(int, int, int, int) = 0;
+
+    virtual bool checkOccupy(int, int, int, int) = 0;
 
 };

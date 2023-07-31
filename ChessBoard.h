@@ -21,6 +21,8 @@ private:
 
     GamePieces* boardPiece[8][8];
 
+    int en_passant;
+
     sf::Font font;
 
     sf::RectangleShape guideBox[3];
@@ -34,11 +36,13 @@ public:
 
     ChessBoard();
 
+    ChessBoard(ChessBoard*);
+
     ~ChessBoard();
 
     bool overlapPiece(const sf::Event& event, GamePieces*&, int&, int&, Player) const;
 
-    bool overlapBoard(const sf::Event& event, GamePieces*, int, int);
+    bool overlapBoard(const sf::Event& event, int&, int&);
 
     void drag(const sf::Event&, GamePieces*);
 
@@ -46,7 +50,23 @@ public:
 
     void showPossibleMove();
 
-    bool moveValid();
+    bool moveValid(const sf::Event&, GamePieces*, int, int, Player);
+
+    void forceMove(int, int, int, int);
+
+    bool checkOccupy(int, int);
+
+    bool checkCheckAfterMove(int, int, int, int, Player);
+
+    Player getSpecificColor(int, int);
+
+    int getEn_passant();
+
+    bool checkRook(int, int);
+
+    bool checkKing(int, int, Player);
+
+    bool isCheck(ChessBoard*, Player);
 
     void render(sf::RenderWindow*);
 
