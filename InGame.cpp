@@ -13,7 +13,7 @@ InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vect
 
 }
 
-InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr) {
+InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(0, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }
@@ -36,10 +36,6 @@ void InGame::start() {
 }
 
 bool InGame::checkEndGameCondition(Player turn) {
-    if (timerWhite->isEnd() || timerBlack->isEnd()) {
-        return true;
-    }
-
     if (board->isCheckmate(turn)) {
         return true;
     }
@@ -62,6 +58,13 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         timerBlack->start();
         break;
     } 
+
+    if (timerWhite->isEnd() || timerBlack->isEnd()) {
+        timerWhite->pause();
+        timerBlack->pause();
+        std::cout << "End Game" << std::endl;
+        state = State::MainMenuState;
+    }
 
     if (bjustMove) {
         if (checkEndGameCondition(turn)) {
