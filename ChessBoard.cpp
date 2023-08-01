@@ -9,7 +9,9 @@
 #include "GamePieces/King.h"
 #include <iostream>
 
-ChessBoard::ChessBoard() {
+ChessBoard::ChessBoard() : bPromotion(false) {
+    promotionDest[0] = -1;
+    promotionDest[1] = -1;
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             board[i][j].setSize(sf::Vector2f(100, 100));
@@ -102,7 +104,9 @@ ChessBoard::ChessBoard() {
 
 }
 
-ChessBoard::ChessBoard(ChessBoard* board) : en_passant(board->en_passant) {
+ChessBoard::ChessBoard(ChessBoard* board) : en_passant(board->en_passant), bPromotion(board->bPromotion) {
+    promotionDest[0] = board->promotionDest[0];
+    promotionDest[1] = board->promotionDest[1];
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             if (board->boardPiece[i][j] == nullptr) {
@@ -248,6 +252,13 @@ bool ChessBoard::moveValid(const sf::Event& event, GamePieces* piece, int i, int
         en_passant = -1;
     }
 
+    if (typeid(*piece) == typeid(Pawn) && (destI == 0 || destI == 7)) {
+        std::cout << "Promotion" << std::endl;
+        promotionDest[0] = destI;
+        promotionDest[1] = destJ;
+        bPromotion = true;
+    }
+
     std::cout << "move success" << std::endl;
 
     return true;
@@ -356,6 +367,30 @@ bool ChessBoard::isStalemate(Player turn) {
         return true;
     }
     return false;
+}
+
+bool ChessBoard::isPromotion() {
+    return bPromotion;
+}
+
+void ChessBoard::setPromotion(bool value) {
+    bPromotion = value;
+}
+
+void ChessBoard::promotion(sf::String pieceString, Player color) {
+    delete boardPiece[promotionDest[0]][promotionDest[1]];
+    if (pieceString == "Queen") {
+        boardPiece[promotionDest[0]][promotionDest[1]] = new Queen((color == Player::White) ? "./Textures/White-Queen.png" : "./Textures/Black-Queen.png", promotionDest[0], promotionDest[1], color, this);
+    }
+    if (pieceString == "Knight") {
+        boardPiece[promotionDest[0]][promotionDest[1]] = new Knight((color == Player::White) ? "./Textures/White-Knight.png" : "./Textures/Black-Knight.png", promotionDest[0], promotionDest[1], color, this);
+    }
+    if (pieceString == "Rook") {
+        boardPiece[promotionDest[0]][promotionDest[1]] = new Rook((color == Player::White) ? "./Textures/White-Rook.png" : "./Textures/Black-Rook.png", promotionDest[0], promotionDest[1], color, this, true);
+    }
+    if (pieceString == "Bishop") {
+        boardPiece[promotionDest[0]][promotionDest[1]] = new Bishop((color == Player::White) ? "./Textures/White-Bishop.png" : "./Textures/Black-Bishop.png", promotionDest[0], promotionDest[1], color, this);
+    }
 }
 
 void ChessBoard::render(sf::RenderWindow *window)

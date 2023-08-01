@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/String.hpp>
 #include "General.h"
 
 namespace sf {
@@ -28,6 +29,10 @@ private:
     sf::RectangleShape guideBox[3];
 
     sf::Text text[3][8];
+
+    bool bPromotion;
+
+    int promotionDest[2];
 
 
 
@@ -73,6 +78,12 @@ public:
     bool isCheckmate(Player);
 
     bool isStalemate(Player);
+
+    bool isPromotion();
+
+    void setPromotion(bool);
+
+    void promotion(sf::String, Player);
 
     void render(sf::RenderWindow*);
 

@@ -7,6 +7,7 @@ class ChessBoard;
 class GamePieces;
 class Timer;
 class Button;
+class PromotionBox;
 
 namespace sf {
     class RenderWindow;
@@ -25,17 +26,14 @@ private:
     Timer* timerWhite;
     Timer* timerBlack;
 
-    Button* btn1;
-    Button* btn2;
-    Button* btn3;
-    Button* btn4;
-
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
 
     Player turn;
 
     bool bjustMove;
+
+    PromotionBox* promotionbox;
     
 
 public:

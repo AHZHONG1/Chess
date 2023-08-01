@@ -18,7 +18,7 @@ public:
 
     Rook(Rook*, ChessBoard*);
 
-    Rook(sf::String, int, int, Player, ChessBoard*);
+    Rook(sf::String, int, int, Player, ChessBoard*, bool = false);
 
     ~Rook();
 

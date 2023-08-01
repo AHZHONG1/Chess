@@ -6,33 +6,25 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "GamePieces.h"
+#include "PromotionBox.h"
+#include <SFML/System/String.hpp>
 
-InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false) {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr) {
 
 }
 
-InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false) {
+InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }
 
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setPosition(0, 0);
-    
-    
-    btn1 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 200), "Start", sf::Color::White, sf::Color::Red);
-    btn2 = new Button(sf::Vector2f(100, 20), sf::Vector2f(140, 300), "Pause", sf::Color::White, sf::Color::Red);
-    btn3 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 200), "Start", sf::Color::White, sf::Color::Red);
-    btn4 = new Button(sf::Vector2f(100, 20), sf::Vector2f(1340, 300), "Pause", sf::Color::White, sf::Color::Red);
 
     start();
 }
 
 InGame::~InGame() {
-    delete btn1;
-    delete btn2;
-    delete btn3;
-    delete btn4;
     delete board;
     delete timerWhite;
     delete timerBlack;
@@ -99,20 +91,16 @@ void InGame::update(sf::RenderWindow* window, State& state) {
             break;
         case sf::Event::MouseButtonPressed:
             if (event.mouseButton.button == sf::Mouse::Left) {
-                if (board->overlapPiece(event, dragedPiece, originalPieceX, originalPieceY, turn)) {
+                if (!board->isPromotion() && board->overlapPiece(event, dragedPiece, originalPieceX, originalPieceY, turn)) {
 
                 }
-                if (btn1->click(event)) {
-                    timerWhite->start();
-                }
-                if (btn2->click(event)) {
-                    timerWhite->pause();
-                }
-                if (btn3->click(event)) {
-                    timerBlack->start();
-                }
-                if (btn4->click(event)) {
-                    timerBlack->pause();
+                sf::String piece = "";
+                if (board->isPromotion() && promotionbox->overlapPiece(event, piece)) {
+                    board->setPromotion(false);
+                    board->promotion(piece, turn);
+                    delete promotionbox;
+                    bjustMove = true;
+                    turn = (turn == Player::White) ? Player::Black : Player::White;
                 }
             }
             break;
@@ -122,8 +110,12 @@ void InGame::update(sf::RenderWindow* window, State& state) {
                     if (!board->moveValid(event, dragedPiece, originalPieceY, originalPieceX, turn)) {
                         dragedPiece->place(originalPieceX, originalPieceY);
                     } else {
-                        bjustMove = true;
-                        turn = (turn == Player::White) ? Player::Black : Player::White;
+                        if (board->isPromotion()) {
+                            promotionbox = new PromotionBox(1600, 900, turn);
+                        } else {
+                            bjustMove = true;
+                            turn = (turn == Player::White) ? Player::Black : Player::White;
+                        }          
                     }
                     
                 }
@@ -144,14 +136,13 @@ void InGame::update(sf::RenderWindow* window, State& state) {
 }
 
 void InGame::render(sf::RenderWindow* window) {
-    window->clear(sf::Color::Black);
+    window->clear();
     window->draw(backgroundSprite);
     timerWhite->render(window);
     timerBlack->render(window);
-    btn1->render(window);
-    btn2->render(window);
-    btn3->render(window);
-    btn4->render(window);
     board->render(window);
+    if (board->isPromotion()) {
+        promotionbox->render(window);
+    }
     window->display();
 }

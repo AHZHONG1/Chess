@@ -9,7 +9,7 @@ Rook::Rook(Rook* piece, ChessBoard* boardState) : GamePieces(piece, boardState),
 
 }
 
-Rook::Rook(sf::String texturePath, int i, int j, Player color, ChessBoard* board) : GamePieces(texturePath, i, j, color, board), bMove(false) {
+Rook::Rook(sf::String texturePath, int i, int j, Player color, ChessBoard* board, bool value) : GamePieces(texturePath, i, j, color, board), bMove(value) {
 
 }
 
