@@ -31,14 +31,14 @@ bool Bishop::moveValidate(int start1, int start2, int end1, int end2) {
 bool Bishop::checkOccupy(int start1, int start2, int end1, int end2) {
     if (start1 > end1) {
         if (start2 > end2) {
-            for (int i = 1; i < (absolute(start1, end1)) && start1 - i > end2; ++i) {
+            for (int i = 1; i < (absolute(start1, end1)); ++i) {
                 if (getBoardState()->checkOccupy(start1 - i, start2 - i) == true) {
                     return true;
                 }
             }
         }
         if (end2 > start2) {
-            for (int i = 1; i < (absolute(start1, end1)) && start1 - i < end2; ++i) {
+            for (int i = 1; i < (absolute(start1, end1)); ++i) {
                 if (getBoardState()->checkOccupy(start1 - i, start2 + i) == true) {
                     return true;
                 }
@@ -47,14 +47,14 @@ bool Bishop::checkOccupy(int start1, int start2, int end1, int end2) {
     }
     if (end1 > start1) {
         if (start2 > end2) {
-            for (int i = 1; i < (absolute(start1, end1)) && start1 + i > end2; ++i) {
+            for (int i = 1; i < (absolute(start1, end1)); ++i) {
                 if (getBoardState()->checkOccupy(start1 + i, start2 - i) == true) {
                     return true;
                 }
             }
         }
         if (end2 > start2) {
-            for (int i = 1; i < (absolute(start1, end1)) && start1 + i < end2; ++i) {
+            for (int i = 1; i < (absolute(start1, end1)); ++i) {
                 if (getBoardState()->checkOccupy(start1 + i, start2 + i) == true) {
                     return true;
                 }
