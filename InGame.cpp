@@ -7,11 +7,11 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "GamePieces.h"
 
-InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White) {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false) {
 
 }
 
-InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White) {
+InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), timerBlack(new Timer(1, 0, 30, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }
@@ -43,6 +43,21 @@ void InGame::start() {
     timerBlack->start();
 }
 
+bool InGame::checkEndGameCondition(Player turn) {
+    if (timerWhite->isEnd() || timerBlack->isEnd()) {
+        return true;
+    }
+
+    if (board->isCheckmate(turn)) {
+        return true;
+    }
+    
+    if (board->isStalemate(turn)) {
+        return true;
+    }
+    return false;
+}
+
 void InGame::update(sf::RenderWindow* window, State& state) {
 
     switch (turn) {
@@ -56,9 +71,20 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         break;
     } 
 
+    if (bjustMove) {
+        if (checkEndGameCondition(turn)) {
+            timerWhite->pause();
+            timerBlack->pause();
+            std::cout << "End Game" << std::endl;
+            state = State::MainMenuState;
+        }
+        bjustMove = false;
+    }
+
     sf::Event event;
 
     while (window->pollEvent(event)) {
+        
         switch (event.type) {
         case sf::Event::Closed:
             window->close();
@@ -96,6 +122,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
                     if (!board->moveValid(event, dragedPiece, originalPieceY, originalPieceX, turn)) {
                         dragedPiece->place(originalPieceX, originalPieceY);
                     } else {
+                        bjustMove = true;
                         turn = (turn == Player::White) ? Player::Black : Player::White;
                     }
                     

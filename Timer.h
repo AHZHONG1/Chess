@@ -21,6 +21,8 @@ private:
     sf::Font font;
     sf::Text text;
 
+    bool bEnd;
+
 
 
 public:
@@ -34,6 +36,8 @@ public:
     void start();
 
     void pause();
+
+    bool isEnd();
 
     void update();
 

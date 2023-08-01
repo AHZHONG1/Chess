@@ -34,6 +34,8 @@ private:
     sf::Sprite backgroundSprite;
 
     Player turn;
+
+    bool bjustMove;
     
 
 public:
@@ -45,6 +47,8 @@ public:
     ~InGame();
 
     void start();
+
+    bool checkEndGameCondition(Player);
 
     void update(sf::RenderWindow*, State&);
 

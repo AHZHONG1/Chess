@@ -2,11 +2,11 @@
 #include <iostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-Timer::Timer() : hour(0), minute(10), second(0), totalTime((hour * 3600 + minute * 60 + second) * 1000) {   
+Timer::Timer() : hour(0), minute(10), second(0), totalTime((hour * 3600 + minute * 60 + second) * 1000), bEnd(false) {   
 
 }
 
-Timer::Timer(int hour, int minute, int second, sf::Vector2f position) : hour(hour), minute(minute), second(second), millisecond(0), totalTime((hour * 3600 + minute * 60 + second) * 1000), clock(nullptr), remainingTime(totalTime) {
+Timer::Timer(int hour, int minute, int second, sf::Vector2f position) : hour(hour), minute(minute), second(second), millisecond(0), totalTime((hour * 3600 + minute * 60 + second) * 1000), clock(nullptr), remainingTime(totalTime), bEnd(false) {
     
     rectangle.setSize(sf::Vector2f(300, 40));
     rectangle.setPosition(position);
@@ -44,6 +44,10 @@ void Timer::pause() {
     clock = nullptr;
 }
 
+bool Timer::isEnd() {
+    return bEnd;
+}
+
 void Timer::update() {
     if (clock) {
         sf::Time elapsed = clock->getElapsedTime();
@@ -58,6 +62,7 @@ void Timer::update() {
     //std::cout << remainingTime << std::endl;
     if (remainingTime <= 0) {
         text.setString("End");
+        bEnd = true;
         return;
     }
     

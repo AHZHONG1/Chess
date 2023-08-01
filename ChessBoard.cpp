@@ -186,6 +186,25 @@ void ChessBoard::showPossibleMove() {
 
 }
 
+bool ChessBoard::isPossibleMove(Player turn) {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (boardPiece[i][j] != nullptr && boardPiece[i][j]->getColor() == turn) {
+                for (int x = 0; x < 8; ++x) {
+                    for (int y = 0; y < 8; ++y) {
+                        if (boardPiece[i][j]->moveValidate(i, j, x, y) && !(boardPiece[i][j]->checkOccupy(i, j, x, y))) {
+                            if (!checkCheckAfterMove(i, j, x, y, turn)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
 bool ChessBoard::moveValid(const sf::Event& event, GamePieces* piece, int i, int j, Player turn) {
     int destI, destJ;
     if (!overlapBoard(event, destI, destJ)) {
@@ -319,6 +338,22 @@ bool ChessBoard::isCheck(ChessBoard* newBoard, Player turn) {
                 }
             }
         }
+    }
+    return false;
+}
+
+bool ChessBoard::isCheckmate(Player turn) {
+    if (isCheck(this, turn)) {
+        if (!isPossibleMove(turn)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ChessBoard::isStalemate(Player turn) {
+    if (!isPossibleMove(turn)) {
+        return true;
     }
     return false;
 }

@@ -50,6 +50,8 @@ public:
 
     void showPossibleMove();
 
+    bool isPossibleMove(Player);
+
     bool moveValid(const sf::Event&, GamePieces*, int, int, Player);
 
     void forceMove(int, int, int, int);
@@ -67,6 +69,10 @@ public:
     bool checkKing(int, int, Player);
 
     bool isCheck(ChessBoard*, Player);
+
+    bool isCheckmate(Player);
+
+    bool isStalemate(Player);
 
     void render(sf::RenderWindow*);
 
