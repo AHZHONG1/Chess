@@ -26,4 +26,4 @@ clean:
 	rm -f *.o *.exe *.d && cd GamePieces && rm -f *.o *.exe *.d;
 	
 # (Windows) del *.o *.exe *.d && cd GamePieces && del *.o *.exe *.d;
-# (Linux or MacOS) rm -f *.o *.exe *.d
+# (Linux or MacOS) rm -f *.o *.exe *.d && cd GamePieces && rm -f *.o *.exe *.d;
