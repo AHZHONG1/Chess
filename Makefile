@@ -6,7 +6,7 @@ DEPS = $(SRCS:.cpp=.d)
 INCLUDE =
 # (Windows) INCLUDE = -I"C:\Program Files\SFML\SFML-2.6.0\include"
 # (Linux) INCLUDE =
-LIB = 
+LIB =
 # (Windows) LIB = -L"C:\Program Files\SFML\SFML-2.6.0\lib"
 # (Linux) LIB =
 
