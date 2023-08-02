@@ -33,8 +33,6 @@ public:
 
     ~PopUpMessageBox();
 
-    void changeBackgroundColor(sf::Color);
-
     void update(sf::RenderWindow*, bool&);
 
     void render(sf::RenderWindow*);

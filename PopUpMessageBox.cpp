@@ -33,10 +33,6 @@ PopUpMessageBox::~PopUpMessageBox() {
     
 }
 
-void PopUpMessageBox::changeBackgroundColor(sf::Color color) {
-    rectangle.setFillColor(color);
-}
-
 void PopUpMessageBox::render(sf::RenderWindow* window) {
     window->draw(rectangle);
     window->draw(text);
