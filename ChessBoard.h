@@ -5,10 +5,13 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/String.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include "General.h"
+#include <vector>
 
 namespace sf {
     class RenderWindow;
+    class Sprite;
 }
 
 class GamePieces;
@@ -34,7 +37,9 @@ private:
 
     int promotionDest[2];
 
+    sf::Texture possibleMoveTexture;
 
+    std::vector<sf::Sprite*> possibleMoveSprites;
 
 public:
 
@@ -53,7 +58,9 @@ public:
 
     void release(const sf::Event&, GamePieces*, int, int);
 
-    void showPossibleMove();
+    void showPossibleMove(int, int, Player);
+
+    void removePossibleMove();
 
     bool isPossibleMove(Player);
 

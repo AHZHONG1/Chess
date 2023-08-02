@@ -9,11 +9,11 @@
 #include "PromotionBox.h"
 #include <SFML/System/String.hpp>
 
-InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr) {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false) {
 
 }
 
-InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), timerBlack(new Timer(0, 3, 0, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr) {
+InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), timerBlack(new Timer(0, 3, 0, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }
@@ -97,7 +97,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         case sf::Event::MouseButtonPressed:
             if (event.mouseButton.button == sf::Mouse::Left) {
                 if (!board->isPromotion() && board->overlapPiece(event, dragedPiece, originalPieceX, originalPieceY, turn)) {
-
+                    bjustPick = true;
                 }
                 sf::String piece = "";
                 if (board->isPromotion() && promotionbox->overlapPiece(event, piece)) {
@@ -122,7 +122,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
                             turn = (turn == Player::White) ? Player::Black : Player::White;
                         }          
                     }
-                    
+                    board->removePossibleMove();
                 }
                 dragedPiece = nullptr;
             }
@@ -130,7 +130,10 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         case sf::Event::MouseMoved:
             if (dragedPiece != nullptr) {
                 board->drag(event, dragedPiece);
-                board->showPossibleMove();
+                if (bjustPick) {
+                    board->showPossibleMove(originalPieceX, originalPieceY, turn);
+                    bjustPick = false;
+                }
             }
             break;
         }

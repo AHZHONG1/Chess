@@ -7,6 +7,7 @@
 #include "GamePieces/Rook.h"
 #include "GamePieces/Queen.h"
 #include "GamePieces/King.h"
+#include <SFML/Graphics/Sprite.hpp>
 #include <iostream>
 
 ChessBoard::ChessBoard() : bPromotion(false) {
@@ -99,12 +100,13 @@ ChessBoard::ChessBoard() : bPromotion(false) {
     guideBox[2].setFillColor(sf::Color(27, 153, 139));
     guideBox[2].setPosition(400, 850);
 
-    
-
+    if (!possibleMoveTexture.loadFromFile("./Textures/Black-Dot.png")) {
+        std::cout << "Texture not load" << std::endl;
+    }
 
 }
 
-ChessBoard::ChessBoard(ChessBoard* board) : en_passant(board->en_passant), bPromotion(board->bPromotion) {
+ChessBoard::ChessBoard(ChessBoard* board) : en_passant(board->en_passant), bPromotion(board->bPromotion), possibleMoveTexture(board->possibleMoveTexture) {
     promotionDest[0] = board->promotionDest[0];
     promotionDest[1] = board->promotionDest[1];
     for (int i = 0; i < 8; ++i) {
@@ -186,8 +188,26 @@ void ChessBoard::release(const sf::Event& event, GamePieces* piece, int i, int j
     // }
 }
 
-void ChessBoard::showPossibleMove() {
+void ChessBoard::showPossibleMove(int x, int y, Player turn) {
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (boardPiece[y][x]->moveValidate(y, x, i, j) && !(boardPiece[y][x]->checkOccupy(y, x, i, j))) {
+                if (!checkCheckAfterMove(y, x, i, j, turn)) {
+                    possibleMoveSprites.push_back(new sf::Sprite(possibleMoveTexture));
+                    possibleMoveSprites.back()->setPosition(450 + 100 * j, 100 + 100 * i);
+                    possibleMoveSprites.back()->setColor(sf::Color(0, 0, 0, 150));
+                    possibleMoveSprites.back()->setOrigin(50, 50);
+                }
+            }
+        }
+    }
+}
 
+void ChessBoard::removePossibleMove() {
+    while (!possibleMoveSprites.empty()) {
+        delete possibleMoveSprites.back();
+        possibleMoveSprites.pop_back();
+    }   
 }
 
 bool ChessBoard::isPossibleMove(Player turn) {
@@ -410,7 +430,9 @@ void ChessBoard::render(sf::RenderWindow *window)
         }
     }
 
-    
+    for (sf::Sprite* possibleMoveSprite : possibleMoveSprites) {
+        window->draw(*possibleMoveSprite);
+    }   
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {

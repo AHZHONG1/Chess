@@ -33,6 +33,8 @@ private:
 
     bool bjustMove;
 
+    bool bjustPick;
+
     PromotionBox* promotionbox;
     
 
