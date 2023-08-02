@@ -10,7 +10,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <iostream>
 
-ChessBoard::ChessBoard() : bPromotion(false) {
+ChessBoard::ChessBoard() : bPromotion(false), bCheck(false) {
     promotionDest[0] = -1;
     promotionDest[1] = -1;
     for (int i = 0; i < 8; ++i) {
@@ -106,7 +106,7 @@ ChessBoard::ChessBoard() : bPromotion(false) {
 
 }
 
-ChessBoard::ChessBoard(ChessBoard* board) : en_passant(board->en_passant), bPromotion(board->bPromotion), possibleMoveTexture(board->possibleMoveTexture) {
+ChessBoard::ChessBoard(ChessBoard* board) : en_passant(board->en_passant), bPromotion(board->bPromotion), possibleMoveTexture(board->possibleMoveTexture), bCheck(false) {
     promotionDest[0] = board->promotionDest[0];
     promotionDest[1] = board->promotionDest[1];
     for (int i = 0; i < 8; ++i) {
@@ -363,6 +363,7 @@ bool ChessBoard::isCheck(ChessBoard* newBoard, Player turn) {
                 for (int x = 0; x < 8; ++x) {
                     for (int y = 0; y < 8; ++y) {
                         if (newBoard->boardPiece[i][j]->moveValidate(i, j, x, y) && !(newBoard->boardPiece[i][j]->checkOccupy(i, j, x, y)) && newBoard->checkKing(x, y, turn)) {
+                            bCheck = true;
                             return true;
                         }
                     }
@@ -371,6 +372,14 @@ bool ChessBoard::isCheck(ChessBoard* newBoard, Player turn) {
         }
     }
     return false;
+}
+
+void ChessBoard::setbCheck(bool value) {
+    bCheck = value;
+}
+
+bool ChessBoard::getbCheck() {
+    return bCheck;
 }
 
 bool ChessBoard::isCheckmate(Player turn) {

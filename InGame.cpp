@@ -105,6 +105,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
                     board->promotion(piece, turn);
                     delete promotionbox;
                     bjustMove = true;
+                    board->setbCheck(false);
                     turn = (turn == Player::White) ? Player::Black : Player::White;
                 }
             }
@@ -119,6 +120,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
                             promotionbox = new PromotionBox(1600, 900, turn);
                         } else {
                             bjustMove = true;
+                            board->setbCheck(false);
                             turn = (turn == Player::White) ? Player::Black : Player::White;
                         }          
                     }

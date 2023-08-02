@@ -41,6 +41,8 @@ private:
 
     std::vector<sf::Sprite*> possibleMoveSprites;
 
+    bool bCheck;
+
 public:
 
 
@@ -81,6 +83,10 @@ public:
     bool checkKing(int, int, Player);
 
     bool isCheck(ChessBoard*, Player);
+
+    void setbCheck(bool);
+
+    bool getbCheck();
 
     bool isCheckmate(Player);
 
