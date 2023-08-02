@@ -1,5 +1,5 @@
 # use CPPFLAGS to set proper configurations in different platforms
-CPPFLAGS = $(INCLUDE) -MMD -MP
+CPPFLAGS = $(INCLUDE) -MMD -MP -fsanitize=address,leak,undefined
 SRCS = main.cpp MainMenu.cpp InGame.cpp PauseMenu.cpp Button.cpp General.cpp ChessBoard.cpp GamePieces.cpp GamePieces/Rook.cpp GamePieces/Pawn.cpp GamePieces/Knight.cpp GamePieces/Bishop.cpp GamePieces/Queen.cpp GamePieces/King.cpp Timer.cpp GameSetting.cpp PromotionBox.cpp
 OBJS = $(SRCS:.cpp=.o)
 DEPS = $(SRCS:.cpp=.d)
@@ -10,7 +10,7 @@ LIB =
 # (Windows) LIB = -L"C:\Program Files\SFML\SFML-2.6.0\lib"
 # (Linux) LIB =
 
-LINKER = $(LIB) -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network -lsfml-audio
+LINKER = $(LIB) -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network -lsfml-audio -fsanitize=address,leak,undefined
 
 all: Chess.exe
 
