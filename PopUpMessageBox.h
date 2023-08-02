@@ -5,12 +5,13 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Clock.hpp>
 
 namespace sf {
     class RenderWindow;
 }
 
-class Button {
+class PopUpMessageBox {
 
 private:
 
@@ -18,17 +19,23 @@ private:
     sf::Font font;
     sf::Text text;
 
+    sf::Clock timer;
+
+    float totalTime;
+
+    float remainingTime;
+
 
 public:
-    Button();
+    PopUpMessageBox();
 
-    Button(sf::Vector2f, sf::Vector2f, sf::String, sf::Color, sf::Color);
+    PopUpMessageBox(sf::Vector2f, sf::Vector2f, sf::String, sf::Color, sf::Color, float);
 
-    ~Button();
+    ~PopUpMessageBox();
 
     void changeBackgroundColor(sf::Color);
 
-    bool click(const sf::Event& event) const;
+    void update(sf::RenderWindow*, bool&);
 
     void render(sf::RenderWindow*);
 

@@ -9,11 +9,11 @@
 #include "PromotionBox.h"
 #include <SFML/System/String.hpp>
 
-InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(1, 0, 30, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false) {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false) {
 
 }
 
-InGame::InGame(int width, int height) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), timerBlack(new Timer(0, 3, 0, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false) {
+InGame::InGame(int width, int height, int hour, int minute, int second) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(hour, minute, second, sf::Vector2f(40, 50))), timerBlack(new Timer(hour, minute, second, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }

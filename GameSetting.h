@@ -5,6 +5,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 class Button;
+class PopUpMessageBox;
+class InGame;
 
 namespace sf {
     class RenderWindow;
@@ -25,6 +27,12 @@ private:
 
     sf::RectangleShape iconRect;
 
+    GameMode chosenGamemode;
+    
+    PopUpMessageBox* messageBox;
+
+    bool bDead;
+
 
 public:
 
@@ -34,7 +42,7 @@ public:
 
     ~GameSetting();
 
-    void update(sf::RenderWindow*, State&);
+    void update(sf::RenderWindow*, State&, InGame*&);
 
     void render(sf::RenderWindow*);
 

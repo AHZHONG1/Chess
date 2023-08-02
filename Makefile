@@ -1,6 +1,6 @@
 # use CPPFLAGS to set proper configurations in different platforms
 CPPFLAGS = $(INCLUDE) -MMD -MP -fsanitize=address,leak,undefined
-SRCS = main.cpp MainMenu.cpp InGame.cpp PauseMenu.cpp Button.cpp General.cpp ChessBoard.cpp GamePieces.cpp GamePieces/Rook.cpp GamePieces/Pawn.cpp GamePieces/Knight.cpp GamePieces/Bishop.cpp GamePieces/Queen.cpp GamePieces/King.cpp Timer.cpp GameSetting.cpp PromotionBox.cpp
+SRCS = main.cpp MainMenu.cpp InGame.cpp PauseMenu.cpp Button.cpp General.cpp ChessBoard.cpp GamePieces.cpp GamePieces/Rook.cpp GamePieces/Pawn.cpp GamePieces/Knight.cpp GamePieces/Bishop.cpp GamePieces/Queen.cpp GamePieces/King.cpp Timer.cpp GameSetting.cpp PromotionBox.cpp PopUpMessageBox.cpp
 OBJS = $(SRCS:.cpp=.o)
 DEPS = $(SRCS:.cpp=.d)
 INCLUDE =

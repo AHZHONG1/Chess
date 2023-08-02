@@ -30,13 +30,14 @@ int main() {
                 delete inGame;
                 inGame = nullptr;
             }
+            if (gameSetting) {
+                delete gameSetting;
+                gameSetting = nullptr;
+            }
             mainMenu->update(&window, state);
             mainMenu->render(&window);
             break;
         case State::InGameState:
-            if (inGame == nullptr) {
-                inGame = new InGame(width, height);
-            }
             inGame->update(&window, state);
             inGame->render(&window);
             break;
@@ -51,7 +52,7 @@ int main() {
             if (gameSetting == nullptr) {
                 gameSetting = new GameSetting(width, height);
             }
-            gameSetting->update(&window, state);
+            gameSetting->update(&window, state, inGame);
             gameSetting->render(&window);
             break;
         }

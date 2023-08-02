@@ -42,7 +42,7 @@ public:
 
     InGame();
 
-    InGame(int, int);
+    InGame(int, int, int, int, int);
 
     ~InGame();
 

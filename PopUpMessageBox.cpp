@@ -1,12 +1,13 @@
-#include "Button.h"
+#include "PopUpMessageBox.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
+#include <SFML/System/Time.hpp>
 
-Button::Button() {
+PopUpMessageBox::PopUpMessageBox() : totalTime(3.0 * 1000), remainingTime(3.0 * 1000) {
 
 }
 
-Button::Button(sf::Vector2f size, sf::Vector2f position, sf::String text, sf::Color backgroundColor, sf::Color textColor) {
+PopUpMessageBox::PopUpMessageBox(sf::Vector2f size, sf::Vector2f position, sf::String text, sf::Color backgroundColor, sf::Color textColor, float time) : totalTime(time * 1000), remainingTime(totalTime) {
     rectangle.setSize(size);
     rectangle.setPosition(position);
     sf::FloatRect buttonRect = rectangle.getLocalBounds();
@@ -24,21 +25,27 @@ Button::Button(sf::Vector2f size, sf::Vector2f position, sf::String text, sf::Co
     sf::FloatRect textRect = this->text.getLocalBounds();
     this->text.setOrigin(textRect.left + textRect.width / 2.0, textRect.top + textRect.height / 2.0);
     this->text.setFillColor(textColor);
+
+    timer.restart();
 }
 
-Button::~Button() {
+PopUpMessageBox::~PopUpMessageBox() {
     
 }
 
-void Button::changeBackgroundColor(sf::Color color) {
+void PopUpMessageBox::changeBackgroundColor(sf::Color color) {
     rectangle.setFillColor(color);
 }
 
-bool Button::click(const sf::Event& event) const {
-    return rectangle.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y);
-}
-
-void Button::render(sf::RenderWindow* window) {
+void PopUpMessageBox::render(sf::RenderWindow* window) {
     window->draw(rectangle);
     window->draw(text);
+}
+
+void PopUpMessageBox::update(sf::RenderWindow* window, bool& value) {
+    sf::Time time = timer.getElapsedTime();
+    remainingTime = totalTime - time.asMilliseconds();
+    if (remainingTime <= 0) {
+        value = true;
+    }
 }

@@ -1,7 +1,9 @@
 #pragma once
 
-enum State { MainMenuState, InGameState, PauseState, GameSettingState };
+enum class State { MainMenuState, InGameState, PauseState, GameSettingState };
 
-enum Player { White, Black, None };
+enum class Player { White, Black, None };
+
+enum class GameMode { PVPOffline, AIOffline, PVPOnline, None };
 
 int absolute(int, int);
