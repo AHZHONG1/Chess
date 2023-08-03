@@ -47,6 +47,15 @@ bool Pawn::moveValidate(int start1, int start2, int end1, int end2) {
 
 bool Pawn::checkOccupy(int start1, int start2, int end1, int end2) {
     if (start2 == end2) {
+        if (absolute(start1, end1) > 1) {
+            if (getColor() == Player::White && (getBoardState()->checkOccupy(end1 + 1, end2) || getBoardState()->checkOccupy(end1, end2))) {
+                return true;
+            }
+            if (getColor() == Player::Black && (getBoardState()->checkOccupy(end1 - 1, end2) || getBoardState()->checkOccupy(end1, end2))) {
+                return true;
+            }
+            return false;
+        }
         if (getBoardState()->checkOccupy(end1, end2)) {
             return true;
         }
