@@ -104,9 +104,19 @@ ChessBoard::ChessBoard() : bPromotion(false), bCheck(false) {
         std::cout << "Texture not load" << std::endl;
     }
 
+    if (!moveBuffer.loadFromFile("./Sounds/piece-move.wav")) {
+        std::cout << "Cannot load sound" << std::endl;
+    }
+    if (!captureBuffer.loadFromFile("./Sounds/piece-capture.wav")) {
+        std::cout << "Cannot load sound" << std::endl;
+    }
+
+    moveSound.setBuffer(moveBuffer);
+    captureSound.setBuffer(captureBuffer);
+
 }
 
-ChessBoard::ChessBoard(ChessBoard* board) : en_passant(board->en_passant), bPromotion(board->bPromotion), possibleMoveTexture(board->possibleMoveTexture), bCheck(false) {
+ChessBoard::ChessBoard(ChessBoard* board) : en_passant(board->en_passant), bPromotion(board->bPromotion), possibleMoveTexture(board->possibleMoveTexture), bCheck(false), moveBuffer(board->moveBuffer), captureBuffer(board->captureBuffer), moveSound(board->moveSound), captureSound(board->captureSound) {
     promotionDest[0] = board->promotionDest[0];
     promotionDest[1] = board->promotionDest[1];
     for (int i = 0; i < 8; ++i) {
@@ -264,7 +274,7 @@ bool ChessBoard::moveValid(const sf::Event& event, GamePieces* piece, int i, int
         dynamic_cast<King*>(piece)->setMove();
     }
 
-    forceMove(i, j, destI, destJ);
+    forceMove(i, j, destI, destJ, true);
 
     if (typeid(*piece) == typeid(Pawn) && absolute(i, destI) == 2) {
         en_passant = j;
@@ -284,7 +294,7 @@ bool ChessBoard::moveValid(const sf::Event& event, GamePieces* piece, int i, int
     return true;
 }
 
-void ChessBoard::forceMove(int start1, int start2, int end1, int end2) {
+void ChessBoard::forceMove(int start1, int start2, int end1, int end2, bool bPlaySound) {
     std::cout << start1 << "|" << start2 << "|" << end1 << "|" << end2 << std::endl;
     boardPiece[start1][start2]->place(end2, end1);
     if (boardPiece[end1][end2] == nullptr && boardPiece[start1][start2] != nullptr && typeid(*boardPiece[start1][start2]) == typeid(Pawn) && start2 != end2) {
@@ -292,6 +302,9 @@ void ChessBoard::forceMove(int start1, int start2, int end1, int end2) {
         boardPiece[start1][start2] = nullptr;
         delete boardPiece[start1][end2];
         boardPiece[start1][end2] = nullptr;
+        if (bPlaySound) {
+            captureSound.play();
+        }
     } else if (boardPiece[start1][start2] != nullptr && typeid(*boardPiece[start1][start2]) == typeid(King) && absolute(start2, end2) > 1) {
         boardPiece[end1][end2] = boardPiece[start1][start2];
         boardPiece[start1][start2] = nullptr;
@@ -305,15 +318,23 @@ void ChessBoard::forceMove(int start1, int start2, int end1, int end2) {
             boardPiece[end1][5] = boardPiece[end1][7];
             boardPiece[end1][7] = nullptr;
         }
+        if (bPlaySound) {
+            moveSound.play();
+        }
     } else if (boardPiece[end1][end2] == nullptr) {
         boardPiece[end1][end2] = boardPiece[start1][start2];
         boardPiece[start1][start2] = nullptr;
+        if (bPlaySound) {
+            moveSound.play();
+        }
     } else {
         delete boardPiece[end1][end2];
         boardPiece[end1][end2] = boardPiece[start1][start2];
         boardPiece[start1][start2] = nullptr;
+        if (bPlaySound) {
+            captureSound.play();
+        }
     }
-    
 }
 
 bool ChessBoard::checkOccupy(int i, int j) {
@@ -325,7 +346,7 @@ bool ChessBoard::checkOccupy(int i, int j) {
 
 bool ChessBoard::checkCheckAfterMove(int start1, int start2, int end1, int end2, Player turn) {
     ChessBoard* newBoard = new ChessBoard(this);
-    newBoard->forceMove(start1, start2 , end1, end2);
+    newBoard->forceMove(start1, start2 , end1, end2, false);
     //newBoard->printBoard();
     if (isCheck(newBoard, turn)) {
         delete newBoard;

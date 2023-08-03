@@ -8,6 +8,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include "General.h"
 #include <vector>
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
 
 namespace sf {
     class RenderWindow;
@@ -43,6 +45,14 @@ private:
 
     bool bCheck;
 
+    sf::SoundBuffer moveBuffer;
+
+    sf::SoundBuffer captureBuffer;
+
+    sf::Sound moveSound;
+
+    sf::Sound captureSound;
+
 public:
 
 
@@ -68,7 +78,7 @@ public:
 
     bool moveValid(const sf::Event&, GamePieces*, int, int, Player);
 
-    void forceMove(int, int, int, int);
+    void forceMove(int, int, int, int, bool);
 
     bool checkOccupy(int, int);
 
