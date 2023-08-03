@@ -62,7 +62,7 @@ void GameSetting::update(sf::RenderWindow* window, State& state, InGame*& inGame
                 if (readyButton->click(event)) {
                     switch(chosenGamemode) {
                     case GameMode::PVPOffline:
-                        inGame = new InGame(window->getSize().x, window->getSize().y, 0, 3, 0);
+                        inGame = new InGame(window->getSize().x, window->getSize().y, 0, 0, 10);
                         state = State::InGameState;
                         if (messageBox) {
                             delete messageBox;

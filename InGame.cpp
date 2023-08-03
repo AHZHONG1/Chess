@@ -8,12 +8,13 @@
 #include "GamePieces.h"
 #include "PromotionBox.h"
 #include <SFML/System/String.hpp>
+#include "EndGameScreen.h"
 
-InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false) {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false) {
 
 }
 
-InGame::InGame(int width, int height, int hour, int minute, int second) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(hour, minute, second, sf::Vector2f(40, 50))), timerBlack(new Timer(hour, minute, second, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false) {
+InGame::InGame(int width, int height, int hour, int minute, int second) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(hour, minute, second, sf::Vector2f(40, 50))), timerBlack(new Timer(hour, minute, second, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }
@@ -28,6 +29,7 @@ InGame::~InGame() {
     delete board;
     delete timerWhite;
     delete timerBlack;
+    delete endGameScreen;
 }
 
 void InGame::start() {
@@ -37,18 +39,27 @@ void InGame::start() {
 
 bool InGame::checkEndGameCondition(Player turn) {
     if (board->isCheckmate(turn)) {
-        std::cout << "Checkmate" << std::endl;
+        std::cout << "Checkmate!" << std::endl;
+        endGameScreen = new EndGameScreen("Checkmate", turn);
+        bEnd = true;
         return true;
     }
     
     if (board->isStalemate(turn)) {
-        std::cout << "Stalemate" << std::endl;
+        std::cout << "Stalemate!" << std::endl;
+        endGameScreen = new EndGameScreen("Stalemate", turn);
+        bEnd = true;
         return true;
     }
     return false;
 }
 
 void InGame::update(sf::RenderWindow* window, State& state) {
+
+    if (bEnd) {
+        endGameScreen->update(window, state);
+        return;
+    }
 
     switch (turn) {
     case Player::White:
@@ -61,11 +72,19 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         break;
     } 
 
-    if (timerWhite->isEnd() || timerBlack->isEnd()) {
+    if (timerWhite->isEnd()) {
         timerWhite->pause();
         timerBlack->pause();
+        bEnd = true;
         std::cout << "End Game" << std::endl;
-        state = State::MainMenuState;
+        endGameScreen = new EndGameScreen("Time out!", Player::White);
+    }
+    if (timerBlack->isEnd()) {
+        timerWhite->pause();
+        timerBlack->pause();
+        bEnd = true;
+        std::cout << "End Game" << std::endl;
+        endGameScreen = new EndGameScreen("Time out!", Player::Black);
     }
 
     if (bjustMove) {
@@ -73,7 +92,6 @@ void InGame::update(sf::RenderWindow* window, State& state) {
             timerWhite->pause();
             timerBlack->pause();
             std::cout << "End Game" << std::endl;
-            state = State::MainMenuState;
         }
         bjustMove = false;
     }
@@ -153,6 +171,9 @@ void InGame::render(sf::RenderWindow* window) {
     board->render(window);
     if (board->isPromotion()) {
         promotionbox->render(window);
+    }
+    if (endGameScreen) {
+        endGameScreen->render(window);
     }
     window->display();
 }

@@ -8,6 +8,7 @@ class GamePieces;
 class Timer;
 class Button;
 class PromotionBox;
+class EndGameScreen;
 
 namespace sf {
     class RenderWindow;
@@ -35,7 +36,11 @@ private:
 
     bool bjustPick;
 
+    bool bEnd;
+
     PromotionBox* promotionbox;
+
+    EndGameScreen* endGameScreen;
     
 
 public:
