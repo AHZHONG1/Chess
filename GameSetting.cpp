@@ -4,12 +4,14 @@
 #include "Button.h"
 #include "PopUpMessageBox.h"
 #include "InGame.h"
+#include "DropdownBox.h"
+#include <iostream>
 
 GameSetting::GameSetting() : messageBox(nullptr), bDead(false) {
 
 }
 
-GameSetting::GameSetting(int width, int height) : chosenGamemode(GameMode::None), messageBox(nullptr), bDead(false) {
+GameSetting::GameSetting(int width, int height) : chosenGamemode(GameMode::None), messageBox(nullptr), bDead(false), timeSelectedIndex(-1), timeSelected(-1) {
     gamemode1Button = new Button(sf::Vector2f(500, 50), sf::Vector2f(1200, 250), "Player VS Player (offline)", sf::Color::White, sf::Color::Red);
     gamemode2Button = new Button(sf::Vector2f(500, 50), sf::Vector2f(1200, 350), "Player VS AI", sf::Color::White, sf::Color::Red);
     gamemode3Button = new Button(sf::Vector2f(500, 50), sf::Vector2f(1200, 450), "Player VS Player (online)", sf::Color::White, sf::Color::Red);
@@ -19,6 +21,8 @@ GameSetting::GameSetting(int width, int height) : chosenGamemode(GameMode::None)
     iconRect.setSize(sf::Vector2f(800, 50));
     iconRect.setPosition(0, 850);
 
+    timeSelectBox = new DropdownBox(sf::Vector2f(500, 50), sf::Vector2f(1200, 550), "Choose Time", sf::Color::White, sf::Color::Red, time, 4);
+
 }
 
 GameSetting::~GameSetting() {
@@ -26,6 +30,7 @@ GameSetting::~GameSetting() {
     delete gamemode2Button;
     delete gamemode3Button;
     delete readyButton;
+    delete timeSelectBox;
 }
 
 void GameSetting::update(sf::RenderWindow* window, State& state, InGame*& inGame) {
@@ -44,6 +49,7 @@ void GameSetting::update(sf::RenderWindow* window, State& state, InGame*& inGame
                     gamemode3Button->changeBackgroundColor(sf::Color::White);
                     chosenGamemode = GameMode::PVPOffline;
                     gamemode1Button->changeBackgroundColor(sf::Color::Green);
+                    break;
                 }
                 if (gamemode2Button->click(event)) {
                     gamemode1Button->changeBackgroundColor(sf::Color::White);
@@ -51,6 +57,7 @@ void GameSetting::update(sf::RenderWindow* window, State& state, InGame*& inGame
                     gamemode3Button->changeBackgroundColor(sf::Color::White);
                     chosenGamemode = GameMode::AIOffline;
                     gamemode2Button->changeBackgroundColor(sf::Color::Green);
+                    break;
                 }
                 if (gamemode3Button->click(event)) {
                     gamemode1Button->changeBackgroundColor(sf::Color::White);
@@ -58,11 +65,53 @@ void GameSetting::update(sf::RenderWindow* window, State& state, InGame*& inGame
                     gamemode3Button->changeBackgroundColor(sf::Color::White);
                     chosenGamemode = GameMode::PVPOnline;
                     gamemode3Button->changeBackgroundColor(sf::Color::Green);
+                    break;
                 }
-                if (readyButton->click(event)) {
+                if (timeSelectBox->click(event)) {
+                    timeSelectBox->showList();
+                    break;
+                }
+                if (timeSelectBox->isShow()) {
+                    if (!timeSelectBox->clickInside(event, timeSelectedIndex)) {
+                        timeSelectBox->hideList();
+                        break;
+                    }
+                    if (timeSelectedIndex != -1) {
+                        switch (timeSelectedIndex) {
+                        case 0:
+                            timeSelected = 60;
+                            break;
+                        case 1:
+                            timeSelected = 180;
+                            break;
+                        case 2:
+                            timeSelected = 600;
+                            break;
+                        case 3:
+                            timeSelected = 1800;
+                            break;
+                        default:
+                            timeSelected = -1;
+                            break;
+                        }
+                        std::cout << "TimeIs=" << timeSelected << std::endl;
+                        break;
+                    }
+                    break;
+                }
+                
+                
+                if (!timeSelectBox->isShow() && readyButton->click(event)) {
                     switch(chosenGamemode) {
                     case GameMode::PVPOffline:
-                        inGame = new InGame(window->getSize().x, window->getSize().y, 0, 0, 10);
+                        if (timeSelected == -1) {
+                            if (messageBox == nullptr) {
+                                messageBox = new PopUpMessageBox(sf::Vector2f(1000, 100), sf::Vector2f(800, 800), "You need to choose a time!", sf::Color(255, 255, 255, 100), sf::Color(0, 0, 0), 3);
+                                break;
+                            }
+                            break;
+                        }
+                        inGame = new InGame(window->getSize().x, window->getSize().y, 0, timeSelected / 60, 0);
                         state = State::InGameState;
                         if (messageBox) {
                             delete messageBox;
@@ -94,8 +143,8 @@ void GameSetting::update(sf::RenderWindow* window, State& state, InGame*& inGame
             messageBox = nullptr;
             bDead = false;
         }
-
     }
+    
 }
 
 void GameSetting::render(sf::RenderWindow* window) {
@@ -108,5 +157,6 @@ void GameSetting::render(sf::RenderWindow* window) {
     if (messageBox) {
         messageBox->render(window);
     }
+    timeSelectBox->render(window);
     window->display();
 }

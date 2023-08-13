@@ -7,6 +7,7 @@
 class Button;
 class PopUpMessageBox;
 class InGame;
+class DropdownBox;
 
 namespace sf {
     class RenderWindow;
@@ -32,6 +33,14 @@ private:
     PopUpMessageBox* messageBox;
 
     bool bDead;
+
+    DropdownBox* timeSelectBox;
+
+    sf::String time[4] = {"1:00", "3:00", "10:00", "30:00"};
+
+    int timeSelectedIndex;
+
+    int timeSelected;
 
 
 public:

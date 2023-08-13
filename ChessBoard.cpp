@@ -155,6 +155,10 @@ ChessBoard::~ChessBoard() {
             }
         }
     }
+    while (!possibleMoveSprites.empty()) {
+        delete possibleMoveSprites.back();
+        possibleMoveSprites.pop_back();
+    }  
 }
 
 bool ChessBoard::overlapPiece(const sf::Event &event, GamePieces*& piece, int& x, int& y, Player turn) const {
