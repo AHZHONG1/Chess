@@ -312,9 +312,9 @@ void ChessBoard::forceMove(int start1, int start2, int end1, int end2, bool bPla
     } else if (boardPiece[start1][start2] != nullptr && typeid(*boardPiece[start1][start2]) == typeid(King) && absolute(start2, end2) > 1) {
         boardPiece[end1][end2] = boardPiece[start1][start2];
         boardPiece[start1][start2] = nullptr;
-        if (end2 == 1) {
-            boardPiece[end1][0]->place(2, end1);
-            boardPiece[end1][2] = boardPiece[end1][0];
+        if (end2 == 2) {
+            boardPiece[end1][0]->place(3, end1);
+            boardPiece[end1][3] = boardPiece[end1][0];
             boardPiece[end1][0] = nullptr;
         }
         if (end2 == 6) {
