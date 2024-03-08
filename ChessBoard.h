@@ -10,6 +10,7 @@
 #include <vector>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Audio/Sound.hpp>
+#include <thread>
 
 namespace sf {
     class RenderWindow;
@@ -17,6 +18,7 @@ namespace sf {
 }
 
 class GamePieces;
+class Stockfish;
 
 class ChessBoard {
 
@@ -76,9 +78,9 @@ public:
 
     bool isPossibleMove(Player);
 
-    bool moveValid(const sf::Event&, GamePieces*, int, int, Player);
+    bool moveValid(const sf::Event&, GamePieces*, int, int, Player, Stockfish*, std::thread*);
 
-    void forceMove(int, int, int, int, bool);
+    void forceMove(int, int, int, int, bool, Stockfish*, std::thread*);
 
     bool checkOccupy(int, int);
 
@@ -106,7 +108,7 @@ public:
 
     void setPromotion(bool);
 
-    void promotion(sf::String, Player);
+    void promotion(sf::String, Player, Stockfish*, std::thread*);
 
     void render(sf::RenderWindow*);
 

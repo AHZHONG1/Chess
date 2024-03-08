@@ -40,7 +40,7 @@ bool King::checkOccupy(int start1, int start2, int end1, int end2) {
         return false;
     }
     if (end2 == 2 && getBoardState()->checkRook(end1, 0) && !getBoardState()->getbCheck()) {
-        for (int i = start2 - 1; i >= end2; --i) {
+        for (int i = start2 - 1; i >= end2 - 1; --i) {
             if (getBoardState()->checkOccupy(end1, i)) {
                 return true;
             }

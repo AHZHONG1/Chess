@@ -9,18 +9,44 @@
 #include "PromotionBox.h"
 #include <SFML/System/String.hpp>
 #include "EndGameScreen.h"
+#include "Stockfish.h"
 
-InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false) {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false), fish(new Stockfish()), t1(nullptr), eval(""), isFinishCalculateEval(false) {
+
+    if (!font.loadFromFile("./Font/roboto/Roboto-Regular.ttf")) {
+        std::cout << "Loading error" << std::endl;
+    } 
+
+    text.setFont(font);
+    text.setString(eval);
+    text.setCharacterSize(32);
+    text.setPosition(0, 0);
+    sf::FloatRect textRect = text.getLocalBounds();
+    //text.setOrigin(textRect.left + textRect.width / 2.0, textRect.top + textRect.height / 2.0);
+    text.setFillColor(sf::Color::Green);
 
 }
 
-InGame::InGame(int width, int height, int hour, int minute, int second) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(hour, minute, second, sf::Vector2f(40, 50))), timerBlack(new Timer(hour, minute, second, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false) {
+InGame::InGame(int width, int height, int hour, int minute, int second) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(hour, minute, second, sf::Vector2f(40, 50))), timerBlack(new Timer(hour, minute, second, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false), fish(new Stockfish()), t1(nullptr), eval(""), isFinishCalculateEval(false) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }
 
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setPosition(0, 0);
+
+    if (!font.loadFromFile("./Font/roboto/Roboto-Regular.ttf")) {
+        std::cout << "Loading error" << std::endl;
+    } 
+
+    text.setFont(font);
+    text.setString(eval);
+    text.setCharacterSize(32);
+    text.setPosition(0, 0);
+    sf::FloatRect textRect = text.getLocalBounds();
+    //text.setOrigin(textRect.left + textRect.width / 2.0, textRect.top + textRect.height / 2.0);
+    text.setFillColor(sf::Color::Green);
+
 
     start();
 }
@@ -30,6 +56,11 @@ InGame::~InGame() {
     delete timerWhite;
     delete timerBlack;
     delete endGameScreen;
+    delete fish;
+
+    if (t1 != nullptr) {
+        delete t1;
+    }
 }
 
 void InGame::start() {
@@ -61,14 +92,22 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         return;
     }
 
+    
+
     switch (turn) {
     case Player::White:
         timerWhite->start();
         timerBlack->pause();
+        fish->update(eval);
+        text.setString(eval);
         break;
     case Player::Black:
         timerWhite->pause();
         timerBlack->start();
+        fish->update(eval);
+        std::string negative = "-";
+        eval = negative.append(eval);
+        text.setString(eval);
         break;
     } 
 
@@ -86,6 +125,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         std::cout << "End Game" << std::endl;
         endGameScreen = new EndGameScreen("Time out!", Player::Black);
     }
+
 
     if (bjustMove) {
         if (checkEndGameCondition(turn)) {
@@ -120,7 +160,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
                 sf::String piece = "";
                 if (board->isPromotion() && promotionbox->overlapPiece(event, piece)) {
                     board->setPromotion(false);
-                    board->promotion(piece, turn);
+                    board->promotion(piece, turn, fish, t1);
                     delete promotionbox;
                     bjustMove = true;
                     board->setbCheck(false);
@@ -131,7 +171,7 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         case sf::Event::MouseButtonReleased:
             if (event.mouseButton.button == sf::Mouse::Left) {
                 if (dragedPiece) {
-                    if (!board->moveValid(event, dragedPiece, originalPieceY, originalPieceX, turn)) {
+                    if (!board->moveValid(event, dragedPiece, originalPieceY, originalPieceX, turn, fish, t1)) {
                         dragedPiece->place(originalPieceX, originalPieceY);
                     } else {
                         if (board->isPromotion()) {
@@ -168,6 +208,7 @@ void InGame::render(sf::RenderWindow* window) {
     window->draw(backgroundSprite);
     timerWhite->render(window);
     timerBlack->render(window);
+    window->draw(text);
     board->render(window);
     if (board->isPromotion()) {
         promotionbox->render(window);

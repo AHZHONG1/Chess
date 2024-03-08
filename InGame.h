@@ -2,6 +2,9 @@
 #include "General.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <thread>
 
 class ChessBoard;
 class GamePieces;
@@ -9,6 +12,7 @@ class Timer;
 class Button;
 class PromotionBox;
 class EndGameScreen;
+class Stockfish;
 
 namespace sf {
     class RenderWindow;
@@ -27,8 +31,17 @@ private:
     Timer* timerWhite;
     Timer* timerBlack;
 
+    sf::Font font;
+    sf::Text text;
+
+    std::string eval;
+
+    bool isFinishCalculateEval;
+
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
+
+    Stockfish* fish;
 
     Player turn;
 
@@ -41,6 +54,8 @@ private:
     PromotionBox* promotionbox;
 
     EndGameScreen* endGameScreen;
+
+    std::thread* t1;
     
 
 public:

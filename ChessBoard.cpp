@@ -9,6 +9,8 @@
 #include "GamePieces/King.h"
 #include <SFML/Graphics/Sprite.hpp>
 #include <iostream>
+#include <thread>
+#include "Stockfish.h"
 
 ChessBoard::ChessBoard() : bPromotion(false), bCheck(false) {
     promotionDest[0] = -1;
@@ -243,7 +245,7 @@ bool ChessBoard::isPossibleMove(Player turn) {
     return false;
 }
 
-bool ChessBoard::moveValid(const sf::Event& event, GamePieces* piece, int i, int j, Player turn) {
+bool ChessBoard::moveValid(const sf::Event& event, GamePieces* piece, int i, int j, Player turn, Stockfish* fish, std::thread* t1) {
     int destI, destJ;
     if (!overlapBoard(event, destI, destJ)) {
         std::cout << "not place on board" << std::endl;
@@ -278,7 +280,7 @@ bool ChessBoard::moveValid(const sf::Event& event, GamePieces* piece, int i, int
         dynamic_cast<King*>(piece)->setMove();
     }
 
-    forceMove(i, j, destI, destJ, true);
+    forceMove(i, j, destI, destJ, true, fish, t1);
 
     if (typeid(*piece) == typeid(Pawn) && absolute(i, destI) == 2) {
         en_passant = j;
@@ -298,7 +300,12 @@ bool ChessBoard::moveValid(const sf::Event& event, GamePieces* piece, int i, int
     return true;
 }
 
-void ChessBoard::forceMove(int start1, int start2, int end1, int end2, bool bPlaySound) {
+void executeStockFish(Stockfish* fish, std::string line, char* position, std::thread* t1) {
+    fish->run(line, position); 
+    delete [] position;
+}
+
+void ChessBoard::forceMove(int start1, int start2, int end1, int end2, bool bPlaySound, Stockfish* fish, std::thread* t1) {
     std::cout << start1 << "|" << start2 << "|" << end1 << "|" << end2 << std::endl;
     boardPiece[start1][start2]->place(end2, end1);
     if (boardPiece[end1][end2] == nullptr && boardPiece[start1][start2] != nullptr && typeid(*boardPiece[start1][start2]) == typeid(Pawn) && start2 != end2) {
@@ -339,6 +346,24 @@ void ChessBoard::forceMove(int start1, int start2, int end1, int end2, bool bPla
             captureSound.play();
         }
     }
+
+    if (fish == nullptr) {
+        return;
+    }
+
+
+    if (!((end1 == 0 || end1 == 7) && typeid(*boardPiece[end1][end2]) == typeid(Pawn))) {
+        char* a = new char[6];
+        a[0] = static_cast<char>(start2 + 'a');
+        a[1] = static_cast<char>(8 - start1 + '0');
+        a[2] = static_cast<char>(end2 + 'a');
+        a[3] = static_cast<char>(8 - end1 + '0');
+        a[4] = '\0';
+        a[5] = '\0';
+
+        t1 = new std::thread(executeStockFish, fish, "", a, t1);
+    }
+
 }
 
 bool ChessBoard::checkOccupy(int i, int j) {
@@ -350,7 +375,7 @@ bool ChessBoard::checkOccupy(int i, int j) {
 
 bool ChessBoard::checkCheckAfterMove(int start1, int start2, int end1, int end2, Player turn) {
     ChessBoard* newBoard = new ChessBoard(this);
-    newBoard->forceMove(start1, start2 , end1, end2, false);
+    newBoard->forceMove(start1, start2 , end1, end2, false, nullptr, nullptr);
     //newBoard->printBoard();
     if (isCheck(newBoard, turn)) {
         delete newBoard;
@@ -431,20 +456,33 @@ void ChessBoard::setPromotion(bool value) {
     bPromotion = value;
 }
 
-void ChessBoard::promotion(sf::String pieceString, Player color) {
+void ChessBoard::promotion(sf::String pieceString, Player color, Stockfish* fish, std::thread* t1) {
+    char* a = new char[6];
+    a[0] = static_cast<char>(promotionDest[1] + 'a');
+    a[1] = static_cast<char>((promotionDest[0] == 0) ? '7': '2');
+    a[2] = static_cast<char>(promotionDest[1] + 'a');
+    a[3] = static_cast<char>(8 - promotionDest[0] + '0');
+    a[5] = '\0';
+
     delete boardPiece[promotionDest[0]][promotionDest[1]];
     if (pieceString == "Queen") {
+        a[4] = 'q';
         boardPiece[promotionDest[0]][promotionDest[1]] = new Queen((color == Player::White) ? "./Textures/White-Queen.png" : "./Textures/Black-Queen.png", promotionDest[0], promotionDest[1], color, this);
     }
     if (pieceString == "Knight") {
+        a[4] = 'n';
         boardPiece[promotionDest[0]][promotionDest[1]] = new Knight((color == Player::White) ? "./Textures/White-Knight.png" : "./Textures/Black-Knight.png", promotionDest[0], promotionDest[1], color, this);
     }
     if (pieceString == "Rook") {
+        a[4] = 'r';
         boardPiece[promotionDest[0]][promotionDest[1]] = new Rook((color == Player::White) ? "./Textures/White-Rook.png" : "./Textures/Black-Rook.png", promotionDest[0], promotionDest[1], color, this, true);
     }
     if (pieceString == "Bishop") {
+        a[4] = 'b';
         boardPiece[promotionDest[0]][promotionDest[1]] = new Bishop((color == Player::White) ? "./Textures/White-Bishop.png" : "./Textures/Black-Bishop.png", promotionDest[0], promotionDest[1], color, this);
     }
+
+    t1 = new std::thread(executeStockFish, fish, "", a, t1);
 }
 
 void ChessBoard::render(sf::RenderWindow *window)
