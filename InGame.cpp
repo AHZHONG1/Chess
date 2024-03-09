@@ -11,14 +11,14 @@
 #include "EndGameScreen.h"
 #include "Stockfish.h"
 
-InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false), fish(new Stockfish()), t1(nullptr), eval(""), isFinishCalculateEval(false) {
+InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vector2f(40, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false), fish(new Stockfish()), t1(nullptr), eval(0.0), isFinishCalculateEval(false) {
 
     if (!font.loadFromFile("./Font/roboto/Roboto-Regular.ttf")) {
         std::cout << "Loading error" << std::endl;
     } 
 
     text.setFont(font);
-    text.setString(eval);
+    text.setString(std::to_string(eval));
     text.setCharacterSize(32);
     text.setPosition(0, 0);
     sf::FloatRect textRect = text.getLocalBounds();
@@ -27,7 +27,7 @@ InGame::InGame() : dragedPiece(nullptr), timerWhite(new Timer(0, 3, 0, sf::Vecto
 
 }
 
-InGame::InGame(int width, int height, int hour, int minute, int second) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(hour, minute, second, sf::Vector2f(40, 50))), timerBlack(new Timer(hour, minute, second, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false), fish(new Stockfish()), t1(nullptr), eval(""), isFinishCalculateEval(false) {
+InGame::InGame(int width, int height, int hour, int minute, int second) : board(new ChessBoard()), dragedPiece(nullptr), timerWhite(new Timer(hour, minute, second, sf::Vector2f(40, 50))), timerBlack(new Timer(hour, minute, second, sf::Vector2f(1260, 50))), originalPieceX(-1), originalPieceY(-1), turn(Player::White), bjustMove(false), promotionbox(nullptr), bjustPick(false), endGameScreen(nullptr), bEnd(false), fish(new Stockfish()), t1(nullptr), eval(0.0), isFinishCalculateEval(false) {
     if (!backgroundTexture.loadFromFile("./Textures/backgroundImage.jpg")) {
         std::cout << "Cannot load image" << std::endl;
     }
@@ -40,7 +40,7 @@ InGame::InGame(int width, int height, int hour, int minute, int second) : board(
     } 
 
     text.setFont(font);
-    text.setString(eval);
+    text.setString(std::to_string(eval));
     text.setCharacterSize(32);
     text.setPosition(0, 0);
     sf::FloatRect textRect = text.getLocalBounds();
@@ -99,15 +99,20 @@ void InGame::update(sf::RenderWindow* window, State& state) {
         timerWhite->start();
         timerBlack->pause();
         fish->update(eval);
-        text.setString(eval);
+        if (fish->getUpdate()) {
+            fish->setUpdate(false);
+            text.setString(std::to_string(eval/100));
+        }
         break;
     case Player::Black:
         timerWhite->pause();
         timerBlack->start();
         fish->update(eval);
-        std::string negative = "-";
-        eval = negative.append(eval);
-        text.setString(eval);
+        if (fish->getUpdate()) {
+            fish->setUpdate(false);
+            eval = -eval;
+            text.setString(std::to_string(eval/100));
+        }
         break;
     } 
 

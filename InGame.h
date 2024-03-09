@@ -34,7 +34,7 @@ private:
     sf::Font font;
     sf::Text text;
 
-    std::string eval;
+    double eval;
 
     bool isFinishCalculateEval;
 

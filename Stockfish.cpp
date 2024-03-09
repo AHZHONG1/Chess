@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Stockfish::Stockfish() : eval("") {
+Stockfish::Stockfish() : eval(0.0), isUpdate(false) {
 
     
 }
@@ -65,22 +65,30 @@ void Stockfish::run(string line, string position) {
 
     if (ans[0] == 'c' && ans[1] == 'p') {
         char val[4] = {ans[3], ans[4], ans[5], '\0'};
-        eval = val;
+        eval = std::stod(val);
         std::cout << val << std::endl;
     }
 
     if (ans[0] == 'm' && ans[1] == 'a', ans[2] == 't' && ans[3] == 'e') {
         char val[3] = {ans[5], ans[6], '\0'};
-        eval = val;
+        eval = std::stod(val);
         std::cout << val << std::endl;
     }
     
     std::cout << "Output" << ans << std::endl;
     
-    
+    isUpdate = true;
 
 }
 
-void Stockfish::update(std::string& outEval) {
+void Stockfish::update(double& outEval) {
     outEval = eval;
+}
+
+bool Stockfish::getUpdate() {
+    return isUpdate;
+}
+
+void Stockfish::setUpdate(bool value) {
+    isUpdate = value;
 }

@@ -12,12 +12,18 @@ public:
 
     void run(std::string line, std::string position);
 
-    void update(std::string&);
+    void update(double&);
+
+    bool getUpdate();
+
+    void setUpdate(bool);
 
 private:
     std::vector<std::string> histories;
 
-    std::string eval;
+    double eval;
+
+    bool isUpdate;
 
     //std::thread* T;
 
